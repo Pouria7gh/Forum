@@ -1,0 +1,15 @@
+﻿@model UserViewModel
+
+<div>
+    <form asp-controller="Account" asp-action="SignUp" method="post">
+        <label asp-for="Username">Username:</label>
+        <input asp-for="Username" />
+        <label asp-for="Email">Email:</label>
+        <input asp-for="Email" />
+        <label asp-for="DisplayName">DisplayName:</label>
+        <input asp-for="DisplayName" />
+        <label asp-for="Password">Password:</label>
+        <input asp-for="Password" />
+        <button>Submit</button>
+    </form>
+</div>
