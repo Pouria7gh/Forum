@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Security
 {
-    internal class PasswordServiceImp : PasswordService
+    public class PasswordServiceImp : PasswordService
     {
         private readonly PasswordHasher<AppUser> _passwordHasher;
 
@@ -22,7 +22,7 @@ namespace Infrastructure.Security
 
         public bool VerifyPassword(AppUser user, string password, string passwordHashed)
         {
-            var result = _passwordHasher.VerifyHashedPassword(user, password, passwordHashed);
+            var result = _passwordHasher.VerifyHashedPassword(user, passwordHashed, password);
 
             bool success = result == PasswordVerificationResult.Success ||
                 result == PasswordVerificationResult.SuccessRehashNeeded;

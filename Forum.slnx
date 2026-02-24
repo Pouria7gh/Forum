@@ -4,4 +4,5 @@
   <Project Path="Infrastructure/Infrastructure.csproj" Id="18220d08-d92d-4dc9-b35f-3e8fafedd22b" />
   <Project Path="Persistence/Persistence.csproj" Id="260aa4fe-381b-4dfb-bab5-b1a919e92c87" />
   <Project Path="Presentation/Presentation.csproj" Id="c2931a9f-e504-4ec1-9077-17f839b9fbf1" />
+  <Project Path="Tests/Tests.csproj" Id="4cf0b9aa-5cdf-4525-ad60-f649ecb8cb2b" />
 </Solution>
