@@ -18,21 +18,27 @@ public class CreateAccount
     public class Handler : IRequestHandler<Command, Result<Unit>>
     {
         private readonly Repository<AppUser> _userRepository;
+        private readonly PasswordService _passwordService;
 
-        public Handler(Repository<AppUser> userRepository)
+        public Handler(Repository<AppUser> userRepository, PasswordService passwordService)
         {
             _userRepository = userRepository;
+            _passwordService = passwordService;
         }
         public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
         {
             AppUser user = new()
             {
                 DisplayName = request.DisplayName,
-                Email = request.Email,
+                Email = request.Email.ToLower(),
                 EmailVerified = false,
-                PasswordHashed = request.Password,
-                Username = request.Username
+                Username = request.Username.ToLower(),
+                PasswordHashed = string.Empty,
             };
+
+            string hashedPassword = _passwordService.HashPassword(user, request.Password);
+
+            user.PasswordHashed = hashedPassword;
 
             await _userRepository.AddAsync(user);
 
