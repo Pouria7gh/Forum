@@ -1,4 +1,5 @@
 using Application;
+using Infrastructure;
 using Persistence;
 
 
@@ -9,6 +10,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
+builder.Services.AddInfrastructure();
 
 var app = builder.Build();
 
