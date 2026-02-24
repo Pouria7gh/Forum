@@ -15,7 +15,7 @@ namespace Presentation.Controllers
         [HttpPost]
         public async Task<IActionResult> SignUp(UserViewModel model)
         {
-            var result = await Mediator.Send(new CreateAccount.Command()
+            var result = await Mediator.Send(new Register.Command()
             {
                 Username = model.Username,
                 Email = model.Email,

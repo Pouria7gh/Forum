@@ -7,7 +7,7 @@ namespace Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddMediatR(config => config.RegisterServicesFromAssemblyContaining<CreateAccount>());
+            services.AddMediatR(config => config.RegisterServicesFromAssemblyContaining<Register>());
 
             return services;
         }

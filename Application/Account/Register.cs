@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Application.User;
 
-public class CreateAccount
+public class Register
 {
     public class Command : IRequest<Result<Unit>>
     {
