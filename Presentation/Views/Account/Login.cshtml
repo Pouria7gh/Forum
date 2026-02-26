@@ -1,28 +1,18 @@
 ﻿@using Presentation.Models.Account
-@model SignUpViewModel
+@model LoginViewModel
 
 <div class="container-fluid">
-<div class="row justify-content-center align-items-center login-bg">
-    <div class="col-11 col-md-7 col-lg-5 card shadow position-relative login-form my-3">
-        <form id="login-form" class="card-body" asp-controller="Account" asp-action="Login" method="post">
+<div class="row justify-content-center align-items-center signup-bg">
+    <div class="col-11 col-md-7 col-lg-5 card shadow position-relative signup-form my-3">
+        <form id="signup-form" class="card-body" asp-controller="Account" asp-action="SignUp" method="post">
             <div class="text-center">
                 <i class="bi bi-box-arrow-in-right text-primary" style="font-size:50px"></i>
             </div>
-            <h2 class="text-center mb-3">Sign up for free!</h2>
-            <div class="mb-3">
-                <label class="form-label" asp-for="Username">Username:</label>
-                <input class="form-control" asp-for="Username" />
-                <span class="text-danger" asp-validation-for="Username"></span>
-            </div>
+            <h2 class="text-center mb-3">Login to your account</h2>
             <div class="mb-3">
                 <label class="form-label" asp-for="Email">Email:</label>
                 <input class="form-control" asp-for="Email" type="text" />
                 <span class="text-danger" asp-validation-for="Email"></span>
-            </div>
-            <div class="mb-3">
-                <label class="form-label" asp-for="DisplayName">DisplayName:</label>
-                <input class="form-control" asp-for="DisplayName" />
-                <span class="text-danger" asp-validation-for="DisplayName"></span>
             </div>
             <div class="mb-3">
                 <label class="form-label" asp-for="Password">Password:</label>
@@ -45,7 +35,7 @@
 <script>
     $(document).ready(() => {
 
-        $("#login-form").validate();
+        $("#signup-form").validate();
 
     })
 </script>}

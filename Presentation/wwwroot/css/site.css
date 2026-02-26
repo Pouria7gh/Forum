@@ -34,3 +34,13 @@ body {
 .signup-form {
     background-color: rgba(var(--bs-body-bg-rgb), 0.5);
 }
+
+.login-bg {
+    background-image: url("/images/signup/signup.png");
+    min-height: 90vh;
+    background-size: cover;
+}
+
+.login-form {
+    background-color: rgba(var(--bs-body-bg-rgb), 0.5);
+}

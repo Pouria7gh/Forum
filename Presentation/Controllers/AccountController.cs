@@ -37,7 +37,7 @@ namespace Presentation.Controllers
             {
                 await SignInWithCookie(result.Value!.Username);
 
-                return Redirect("Home/Index");
+                return Redirect("/");
             }
             else
             {
@@ -57,6 +57,23 @@ namespace Presentation.Controllers
             var principal = new ClaimsPrincipal(identity);
 
             await HttpContext.SignInAsync("Cookies", principal);
+        }
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                return Redirect("/");
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Login(LoginViewModel model)
+        {
+            return Ok();
         }
     }
 }
