@@ -12,6 +12,8 @@ public class DataContext : DbContext
     }
 
     public DbSet<AppUser> Users { get; set; }
+    public DbSet<Role> Roles { get; set; }
+    public DbSet<UserRole> UserRoles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -43,6 +45,35 @@ public class DataContext : DbContext
                 .IsRequired();
         });
 
+        #endregion
+
+        #region Role
+
+        builder.Entity<Role>(role =>
+        {
+            role.HasKey(r => r.Id);
+
+            role.Property(r => r.Name)
+                .IsRequired();
+        });
+
+        #endregion
+
+        #region UserRole join table
+
+        builder.Entity<UserRole>(entity =>
+        {
+            entity.HasKey(x => new { x.UserId, x.RoleId });
+
+            entity.HasOne(x => x.User)
+                .WithMany(x => x.UserRoles)
+                .HasForeignKey(x => x.UserId);
+
+            entity.HasOne(x => x.Role)
+                .WithMany(x => x.UserRoles)
+                .HasForeignKey(x => x.RoleId);
+        });
+        
         #endregion
     }
 }
