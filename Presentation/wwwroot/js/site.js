@@ -1,4 +1,11 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿
+// sets up sites color theme
+$(document).ready(function () {
+    const darkModeMql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
 
-// Write your JavaScript code.
+    if (darkModeMql && darkModeMql.matches) {
+        $("#html").attr("data-bs-theme", "dark");
+    } else {
+        $("#html").attr("data-bs-theme", "light");
+    }
+});

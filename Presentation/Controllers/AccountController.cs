@@ -1,21 +1,31 @@
-﻿using MediatR;
+﻿using Application.User;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using Presentation.Models;
-using Application.User;
+using Presentation.Models.Account;
+using System.Security.Claims;
 
 namespace Presentation.Controllers
 {
     public class AccountController : BaseController
     {
+        [HttpGet]
         public IActionResult SignUp()
         {
+            if (User.Identity == null || User.Identity.IsAuthenticated)
+            {
+                return Redirect("/");
+            }
+
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> SignUp(UserViewModel model)
+        public async Task<IActionResult> SignUp(SignUpViewModel model)
         {
-            var result = await Mediator.Send(new Register.Command()
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var result = await Mediator.Send(new SignUp.Command()
             {
                 Username = model.Username,
                 Email = model.Email,
@@ -25,12 +35,28 @@ namespace Presentation.Controllers
 
             if (result.Succeed)
             {
-                return Ok();
+                await SignInWithCookie(result.Value!.Username);
+
+                return Redirect("Home/Index");
             }
             else
             {
-                return BadRequest();
+                ViewData["Error"] = result.ErrorMessage;
+                return View(model);
             }
+        }
+
+        private async Task SignInWithCookie(string username)
+        {
+            var claims = new List<Claim>
+            {
+                new(ClaimTypes.Name, username)
+            };
+
+            var identity = new ClaimsIdentity(claims, "Cookies");
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync("Cookies", principal);
         }
     }
 }

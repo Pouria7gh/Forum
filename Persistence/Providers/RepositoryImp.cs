@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Domain;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Persistence.Providers
 {
@@ -18,6 +19,17 @@ namespace Persistence.Providers
         {
             _dbSet.Add(entity);
             await _dataContext.SaveChangesAsync();
+        }
+
+        public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.AnyAsync(predicate);
+        }
+
+        public async Task<T?> GetByIdAsync(Guid id)
+        {
+            var entity = await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
+            return entity;
         }
     }
 }

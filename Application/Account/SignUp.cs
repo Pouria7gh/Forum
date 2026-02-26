@@ -1,13 +1,14 @@
 ﻿using Application.Core;
+using Application.DTOs.Account;
 using Application.Interfaces;
 using Domain.User;
 using MediatR;
 
 namespace Application.User;
 
-public class Register
+public class SignUp
 {
-    public class Command : IRequest<Result<Unit>>
+    public class Command : IRequest<Result<SignUpDto>>
     {
         public required string Username { get; set; }
         public required string Password { get; set; }
@@ -15,7 +16,7 @@ public class Register
         public required string Email { get; set; }
     }
 
-    public class Handler : IRequestHandler<Command, Result<Unit>>
+    public class Handler : IRequestHandler<Command, Result<SignUpDto>>
     {
         private readonly Repository<AppUser> _userRepository;
         private readonly PasswordService _passwordService;
@@ -25,8 +26,18 @@ public class Register
             _userRepository = userRepository;
             _passwordService = passwordService;
         }
-        public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Result<SignUpDto>> Handle(Command request, CancellationToken cancellationToken)
         {
+            if(await _userRepository.ExistsAsync(x => x.Email == request.Email))
+            {
+                return Result<SignUpDto>.Failure("An account with this email already exists.");
+            }
+
+            if (await _userRepository.ExistsAsync(x => x.Username == request.Username))
+            {
+                return Result<SignUpDto>.Failure("Username is already taken.");
+            }
+
             AppUser user = new()
             {
                 DisplayName = request.DisplayName,
@@ -42,7 +53,7 @@ public class Register
 
             await _userRepository.AddAsync(user);
 
-            return Result<Unit>.Success(Unit.Value);
+            return Result<SignUpDto>.Success(new() { Username = user.Username });
         }
     }
 }
