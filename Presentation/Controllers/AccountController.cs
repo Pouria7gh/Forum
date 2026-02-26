@@ -1,4 +1,5 @@
-﻿using Application.User;
+﻿using Application.Account;
+using Application.User;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Models.Account;
@@ -71,9 +72,24 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            return Ok();
+            var result = await Mediator.Send(new Login.Command()
+            {
+                Email = model.Email,
+                Password = model.Password
+            });
+
+            if (result.Succeed)
+            {
+                await SignInWithCookie(username: result.Value!.Username);
+                return Redirect("/");
+            }
+            else
+            {
+                ViewData["Error"] = result.ErrorMessage;
+                return View("Login", model);
+            }
         }
     }
 }

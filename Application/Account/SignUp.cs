@@ -3,6 +3,8 @@ using Application.DTOs.Account;
 using Application.Interfaces;
 using Domain.User;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Persistence.Providers;
 
 namespace Application.User;
 
@@ -18,22 +20,22 @@ public class SignUp
 
     public class Handler : IRequestHandler<Command, Result<SignUpDto>>
     {
-        private readonly Repository<AppUser> _userRepository;
+        private readonly DataContext _dataContext;
         private readonly PasswordService _passwordService;
 
-        public Handler(Repository<AppUser> userRepository, PasswordService passwordService)
+        public Handler(DataContext dataContext, PasswordService passwordService)
         {
-            _userRepository = userRepository;
+            _dataContext = dataContext;
             _passwordService = passwordService;
         }
         public async Task<Result<SignUpDto>> Handle(Command request, CancellationToken cancellationToken)
         {
-            if(await _userRepository.ExistsAsync(x => x.Email == request.Email))
+            if(await _dataContext.Users.AnyAsync(x => x.Email == request.Email.ToLower()))
             {
                 return Result<SignUpDto>.Failure("An account with this email already exists.");
             }
 
-            if (await _userRepository.ExistsAsync(x => x.Username == request.Username))
+            if (await _dataContext.Users.AnyAsync(x => x.Username == request.Username.ToLower()))
             {
                 return Result<SignUpDto>.Failure("Username is already taken.");
             }
@@ -51,9 +53,19 @@ public class SignUp
 
             user.PasswordHashed = hashedPassword;
 
-            await _userRepository.AddAsync(user);
+            _dataContext.Users.Add(user);
 
-            return Result<SignUpDto>.Success(new() { Username = user.Username });
+            var result = await _dataContext.SaveChangesAsync();
+
+            if (result > 0)
+            {
+                return Result<SignUpDto>.Success(new() { Username = user.Username });
+            }
+            else
+            {
+                return Result<SignUpDto>.Failure("Problem Signing up");
+            }
+
         }
     }
 }
