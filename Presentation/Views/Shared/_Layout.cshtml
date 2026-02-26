@@ -26,6 +26,13 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        @if (User.Identity == null || !User.Identity.IsAuthenticated)
+                        {
+                        <li class="ms-auto">
+                            <a class="btn btn-primary me-1" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                            <a class="btn btn-outline-primary" asp-area="" asp-controller="Account" asp-action="SignUp">SignUp</a>
+                        </li>
+                        }
                     </ul>
                 </div>
             </div>
