@@ -1,7 +1,6 @@
 ﻿using Application.Core;
 using Application.DTOs.Account;
 using Application.Interfaces;
-using Domain.User;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Providers;
