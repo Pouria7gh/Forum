@@ -47,12 +47,20 @@ namespace Presentation.Controllers
             }
         }
 
-        private async Task SignInWithCookie(string username)
+        private async Task SignInWithCookie(string username, List<string>? roles = null)
         {
             var claims = new List<Claim>
             {
                 new(ClaimTypes.Name, username)
             };
+
+            if (roles != null)
+            {
+                foreach(string role in roles)
+                {
+                    claims.Add(new(ClaimTypes.Role, role));
+                }
+            }
 
             var identity = new ClaimsIdentity(claims, "Cookies");
             var principal = new ClaimsPrincipal(identity);
@@ -82,7 +90,7 @@ namespace Presentation.Controllers
 
             if (result.Succeed)
             {
-                await SignInWithCookie(username: result.Value!.Username);
+                await SignInWithCookie(result.Value!.Username, result.Value!.Roles);
                 return Redirect("/");
             }
             else

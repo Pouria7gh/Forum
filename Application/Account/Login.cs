@@ -28,7 +28,8 @@ public class Login
         }
         public async Task<Result<LoginDto>> Handle(Command request, CancellationToken cancellationToken)
         {
-            var user = await _dataContext.Users.FirstOrDefaultAsync(x => x.Email == request.Email);
+            var user = await _dataContext.Users.FirstOrDefaultAsync(x => x.Email == request.Email, 
+                cancellationToken: cancellationToken);
 
             if (user == null)
             {
@@ -39,7 +40,12 @@ public class Login
             
             if (result)
             {
-                return Result<LoginDto>.Success(new() { Username = user.Username});
+                var roles = await _dataContext.Roles
+                    .Where(x => x.UserRoles.Any(x => x.UserId == user.Id))
+                    .Select(x => x.Name)
+                    .ToListAsync(cancellationToken);
+                
+                return Result<LoginDto>.Success(new() { Username = user.Username, Roles = roles});
             }
             else
             {
