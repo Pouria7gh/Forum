@@ -1,6 +1,8 @@
 using Application;
 using Infrastructure;
 using Persistence;
+using Persistence.Providers;
+using Persistence.SeedData;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,5 +43,10 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+
+await Seed.AddSeedData(services.GetRequiredService<DataContext>());
 
 app.Run();
