@@ -1,0 +1,68 @@
+﻿@using Presentation.Constraints
+
+<!DOCTYPE html>
+<html id="html" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Presentation</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Presentation.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/bootstrap-icons/bootstrap-icons.min.css" />
+</head>
+<body>
+    <div class="d-flex" id="wrapper">
+        <div class="bg-dark border-end" id="sidebar-wrapper">
+            <div class="sidebar-heading p-4 text-white fs-4 fw-bold">Admin Panel</div>
+            <div class="list-group list-group-flush px-3">
+
+                <a href="/Admin"
+                    class="text-decoration-none text-white py-2 px-3 mb-1 mt-2"
+                >
+                    <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                </a>
+
+                <div>
+                    <a class="nav-link text-white py-2 px-3 d-flex justify-content-between align-items-center mb-1 collapsed"
+                       data-bs-toggle="collapse" href="#projects-collapse" role="button">
+                        <span><i class="bi bi-briefcase me-2"></i> Rooms</span>
+                        <i class="bi bi-chevron-down small collapse-icon"></i>
+                    </a>
+                    <div class="collapse" id="projects-collapse">
+                        <ul class="nav flex-column ms-4 mb-2">
+                            <li class="nav-item"><a class="nav-link text-white-50 py-1 px-0" href="#">Create Room</a></li>
+                            <li class="nav-item"><a class="nav-link text-white-50 py-1 px-0" href="#">Manage Rooms</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="page-content-wrapper">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom px-3">
+                <div class="container-fluid">
+                    <button class="btn btn-outline-dark" id="sidebar-toggle">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <span class="ms-3 fw-semibold">Dashboard Overview</span>
+                    <div class="ms-auto">
+                        <a asp-controller="Account" asp-action="Logout" class="btn btn-sm btn-primary">Logout</a>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container-fluid p-4">
+                <div class="card shadow-sm border-0 bg-white p-5 text-center">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

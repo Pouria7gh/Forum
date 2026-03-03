@@ -44,6 +44,10 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.MapControllerRoute(
+    name: "Admin",
+    pattern: "{area=exists}/{controller=Dashboard}/{action=Index}/{id?}");
+
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
 

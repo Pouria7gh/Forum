@@ -9,3 +9,19 @@ $(document).ready(function () {
         $("#html").attr("data-bs-theme", "light");
     }
 });
+
+// admin navbar
+$(document).ready(() => {
+    $("#sidebar-toggle").on("click", () => {
+        const $sidebarWrapper = $("#sidebar-wrapper");
+        if (!$sidebarWrapper) {
+            return;
+        }
+
+        if ($sidebarWrapper.hasClass("hide")) {
+            $sidebarWrapper.removeClass("hide");
+        } else {
+            $sidebarWrapper.addClass("hide");
+        }
+    });
+});

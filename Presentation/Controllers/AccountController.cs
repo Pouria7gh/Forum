@@ -99,5 +99,13 @@ namespace Presentation.Controllers
                 return View("Login", model);
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+
+            return Redirect("/");
+        }
     }
 }
