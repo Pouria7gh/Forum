@@ -8,17 +8,14 @@
         public string? Description { get; set; }
         
         #region Management
-
         public bool IsClosed { get; set; }
         public bool IsPinned { get; set; }
-
         #endregion
 
         #region Navigation
-
-        public virtual List<ForumPost>? Posts { get; set; }
-
+        //public virtual List<ForumPost>? Posts { get; set; }
         #endregion
+
         public bool IsDisabled { get; set; } = false;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt {  get; set; } = DateTime.UtcNow;
