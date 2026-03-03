@@ -1,7 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-
-namespace Domain.Forum
+﻿namespace Domain.Forum
 {
     public class ForumRoom : BaseEntity
     {
