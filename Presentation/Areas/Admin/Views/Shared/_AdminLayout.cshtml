@@ -31,7 +31,14 @@
                     </a>
                     <div class="collapse" id="projects-collapse">
                         <ul class="nav flex-column ms-4 mb-2">
-                            <li class="nav-item"><a class="nav-link text-white-50 py-1 px-0" href="#">Create Room</a></li>
+                            <li class="nav-item">
+                                <a 
+                                    href="/Admin/Forum/CreateForumRoom"
+                                    class="nav-link text-white-50 py-1 px-0"
+                                >
+                                    Create Room
+                                </a>
+                            </li>
                             <li class="nav-item"><a class="nav-link text-white-50 py-1 px-0" href="#">Manage Rooms</a></li>
                         </ul>
                     </div>
@@ -52,12 +59,7 @@
                     </div>
                 </div>
             </nav>
-
-            <div class="container-fluid p-4">
-                <div class="card shadow-sm border-0 bg-white p-5 text-center">
-                    @RenderBody()
-                </div>
-            </div>
+            @RenderBody()
         </div>
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

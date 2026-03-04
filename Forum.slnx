@@ -1,8 +1,13 @@
 <Solution>
-  <Project Path="Application/Application.csproj" Id="04105880-05fa-4bad-a1ae-7f4049ca0ec0" />
-  <Project Path="Domain/Domain.csproj" Id="61e0f0df-90b8-4b3b-b230-018d6f63c70d" />
-  <Project Path="Infrastructure/Infrastructure.csproj" Id="18220d08-d92d-4dc9-b35f-3e8fafedd22b" />
-  <Project Path="Persistence/Persistence.csproj" Id="260aa4fe-381b-4dfb-bab5-b1a919e92c87" />
-  <Project Path="Presentation/Presentation.csproj" Id="c2931a9f-e504-4ec1-9077-17f839b9fbf1" />
+  <Folder Name="/Libraries/">
+    <Project Path="Application/Application.csproj" Id="04105880-05fa-4bad-a1ae-7f4049ca0ec0" />
+    <Project Path="Domain/Domain.csproj" Id="61e0f0df-90b8-4b3b-b230-018d6f63c70d" />
+    <Project Path="Infrastructure/Infrastructure.csproj" Id="18220d08-d92d-4dc9-b35f-3e8fafedd22b" />
+    <Project Path="Persistence/Persistence.csproj" Id="260aa4fe-381b-4dfb-bab5-b1a919e92c87" />
+  </Folder>
+  <Folder Name="/Presentation/">
+    <Project Path="Forum.Web.Framework/Forum.Web.Framework.csproj" Id="f2222846-0079-47a3-8d68-0b49d024ced8" />
+    <Project Path="Presentation/Forum.Web.csproj" Id="c2931a9f-e504-4ec1-9077-17f839b9fbf1" />
+  </Folder>
   <Project Path="Tests/Tests.csproj" Id="4cf0b9aa-5cdf-4525-ad60-f649ecb8cb2b" />
 </Solution>
