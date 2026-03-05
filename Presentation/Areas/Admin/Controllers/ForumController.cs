@@ -1,4 +1,5 @@
 ﻿using Application.Forum;
+using Forum.Web.Areas.Admin.Models.Forum;
 using Forum.Web.Framework.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Areas.Admin.Models.Forum;
@@ -39,12 +40,47 @@ public class ForumController : BaseAdminController
 
         if (result.Succeed)
         {
-            return View();
+            if (continueEditing)
+            {
+                return View(model);
+            }
+            else
+            {
+                return Redirect("/Admin/Forum/ListForumRooms");
+            }
+
         }
         else
         {
             ViewData["Error"] = result.ErrorMessage;
             return View(model);
+        }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> ListForumRooms()
+    {
+        ListForumRooms.Query query = new();
+
+        var result = await Mediator.Send(query);
+
+        if (result.Succeed)
+        {
+            var forumRooms = result.Value!.Select(x => new ForumRoomViewModel()
+            {
+                Description = x.Description,
+                IsClosed = x.IsClosed,
+                IsPinned = x.IsPinned,
+                Rules = x.Rules,
+                Subtitle = x.Subtitle,
+                Title = x.Title
+            }).ToList();
+
+            return View(forumRooms);
+        }
+        else
+        {
+            return View(new ForumRoomViewModel());
         }
     }
 }

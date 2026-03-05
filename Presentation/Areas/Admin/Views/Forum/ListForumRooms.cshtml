@@ -1,0 +1,28 @@
+﻿@using Forum.Web.Areas.Admin.Models.Forum
+@model List<ForumRoomViewModel>
+
+<div class="container pt-3">
+@foreach (var forumRoom in Model)
+{
+    <div class="flex position-relative border border-opacity-25 border-dark shadow-lg rounded-2 p-3 mb-2">
+        <div>
+            <p class="fs-5 mb-1">@forumRoom.Title</p>
+            <p class="my-0 py-0 ps-1">@forumRoom.Subtitle</p>
+        </div>
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-warning me-2">Manage</button>
+            <button class="btn btn-primary">View</button>
+        </div>
+        @if(forumRoom.IsPinned){
+            <i class="bi-pin-fill text-primary position-absolute top-0 end-0 mt-2 me-3" ></i>
+        }
+    </div>
+}
+
+@if (Model.Count == 0)
+{
+    <div class="p-3 text-center">
+        Forum Rooms will apear here
+    </div>
+}
+</div>
