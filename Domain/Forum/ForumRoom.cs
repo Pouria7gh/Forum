@@ -13,7 +13,7 @@
         #endregion
 
         #region Navigation
-        //public virtual List<ForumPost>? Posts { get; set; }
+        public virtual List<ForumPost>? Posts { get; set; }
         #endregion
 
         public bool IsDisabled { get; set; } = false;

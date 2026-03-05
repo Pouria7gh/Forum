@@ -16,6 +16,7 @@ public class DataContext : DbContext
     public DbSet<Role> Roles { get; set; }
     public DbSet<UserRole> UserRoles { get; set; }
     public DbSet<ForumRoom> ForumRooms { get; set; }
+    public DbSet<ForumPost> ForumPosts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -92,6 +93,24 @@ public class DataContext : DbContext
 
             entity.Property(f => f.IsDisabled)
                 .HasDefaultValue(false);
+        });
+        #endregion
+
+        #region ForumPost
+        builder.Entity<ForumPost>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+
+            entity.HasOne(x => x.ForumRoom)
+                .WithMany(x => x.Posts)
+                .HasForeignKey(x => x.ForumRoomId);
+
+            entity.Property(x => x.PostContent)
+                .IsRequired()
+                .HasMaxLength(8192);
+
+            entity.Property(x => x.Description)
+                .HasMaxLength(2048);
         });
         #endregion
     }

@@ -2,7 +2,7 @@
 
 namespace Domain.Forum
 {
-    public class ForumPost
+    public class ForumPost : BaseEntity
     {
         public string PostContent { get; set; } = string.Empty;
 
@@ -12,12 +12,11 @@ namespace Domain.Forum
         public Guid? UserId { get; set; }
         public virtual AppUser? User { get; set; }
 
-        public Guid? ParentPostId { get; set; }
-        public virtual ForumPost? ParentPost { get; set; }
-
+        //public Guid? ParentPostId { get; set; }
+        //public virtual ForumPost? ParentPost { get; set; }
         #endregion
 
-        public virtual List<ForumPost>? Replies { get; set; }
+        //public virtual List<ForumPost>? Replies { get; set; }
         public string? Description { get; set; }
         public bool IsDisabled { get; set; } = false;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
