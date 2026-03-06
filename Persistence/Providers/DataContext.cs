@@ -115,6 +115,10 @@ public class DataContext : DbContext
 
             entity.Property(x => x.Description)
                 .HasMaxLength(2048);
+
+            entity.HasOne(x => x.ParentPost)
+                .WithMany(x => x.Replies)
+                .HasForeignKey(x => x.ParentPostId);
         });
         #endregion
     }
