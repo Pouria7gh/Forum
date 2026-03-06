@@ -1,5 +1,5 @@
 :root {
-   
+    --bg-rule: #e3f2fd;
 }
 
 * {
@@ -62,4 +62,13 @@ html {
 
 .nav-link.collapsed > .collapse-icon {
     transform: rotateZ(0);
+}
+
+/* Forum Room Index.cshtml */
+.forum-room-container {
+    min-height: 80vh;
+}
+
+.bg-rule {
+    background-color: var(--bg-rule);
 }

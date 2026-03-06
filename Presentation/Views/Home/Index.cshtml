@@ -1,8 +1,41 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using Forum.Web.Areas.Admin.Models.Forum
+@model List<ForumRoomViewModel>
+
+<div class="p-4 bg-primary text-light my-3">
+    <div class="container">
+        <h3 class="mb-3">In the name of Freedom of speach</h3>
+        <div class="ms-2">
+            <p class="mb-1">Respect the rules.</p>
+            <p>Don't be rude.</p>
+        </div>
+    </div>
+</div>
+<div class="container pt-3">
+@foreach (var forumRoom in Model)
+{
+    <div class="flex position-relative border border-opacity-25 border-dark shadow-lg rounded-2 p-3 mb-2">
+        <div>
+            <p class="fs-5 mb-1">@forumRoom.Title</p>
+            <p class="my-0 py-0 ps-1">@forumRoom.Subtitle</p>
+        </div>
+        @if (!string.IsNullOrEmpty(forumRoom.Description)){
+            <div class="p-3 bg-body-secondary my-2 rounded">
+                @forumRoom.Description
+            </div>
+        }
+        <div class="d-flex justify-content-end">
+            <a href="/ForumRoom/@forumRoom.Id" class="btn btn-primary">View</a>
+        </div>
+        @if(forumRoom.IsPinned){
+            <i class="bi-pin-fill text-primary position-absolute top-0 end-0 mt-2 me-3" ></i>
+        }
+    </div>
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@if (Model.Count == 0)
+{
+    <div class="p-3 text-center">
+        Forum Rooms will apear here
+    </div>
+}
 </div>

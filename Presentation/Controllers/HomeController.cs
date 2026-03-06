@@ -1,11 +1,12 @@
-using Microsoft.AspNetCore.Authorization;
+using Application.Forum;
+using Forum.Web.Areas.Admin.Models.Forum;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Models;
 using System.Diagnostics;
 
 namespace Presentation.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
 
@@ -14,14 +15,31 @@ namespace Presentation.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
-        }
+            ListForumRooms.Query query = new();
 
-        public IActionResult Privacy()
-        {
-            return View();
+            var result = await Mediator.Send(query);
+
+            if (result.Succeed)
+            {
+                var forumRooms = result.Value!.Select(x => new ForumRoomViewModel()
+                {
+                    Id = x.Id,
+                    Description = x.Description,
+                    IsClosed = x.IsClosed,
+                    IsPinned = x.IsPinned,
+                    Rules = x.Rules,
+                    Subtitle = x.Subtitle,
+                    Title = x.Title
+                }).ToList();
+
+                return View(forumRooms);
+            }
+            else
+            {
+                return View(new ForumRoomViewModel());
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

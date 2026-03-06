@@ -101,6 +101,10 @@ public class DataContext : DbContext
         {
             entity.HasKey(x => x.Id);
 
+            entity.HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(x => x.UserId);
+
             entity.HasOne(x => x.ForumRoom)
                 .WithMany(x => x.Posts)
                 .HasForeignKey(x => x.ForumRoomId);

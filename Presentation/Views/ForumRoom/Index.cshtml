@@ -1,0 +1,22 @@
+﻿@using Application.DTOs.ForumRoom
+@model ForumRoomDto
+
+<div class="container mb-3 forum-room-container">
+    <div class="bg-body-secondary rounded mt-3 p-3">
+        <h3>@Model.Title</h3>
+        <p>@Model.Subtitle</p>
+        <p>
+            @Model.Description
+        </p>
+        
+        <div class="bg-rule p-3 rounded"> 
+            Rules:
+            @Model.Rules
+        </div>
+    </div>
+
+</div>
+
+<div class="container forum-posts-container">
+    
+</div>
