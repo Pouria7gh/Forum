@@ -44,7 +44,7 @@ public class Login
                     .Select(x => x.Name)
                     .ToListAsync(cancellationToken);
                 
-                return Result<LoginDto>.Success(new() { Username = user.Username, Roles = roles});
+                return Result<LoginDto>.Success(new() { UserId = user.Id, Roles = roles});
             }
             else
             {

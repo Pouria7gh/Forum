@@ -2,7 +2,7 @@
 {
     public class LoginDto
     {
-        public string Username { get; set; } = string.Empty;
+        public Guid UserId { get; set; }
         public List<string>? Roles { get; set; }
     }
 }

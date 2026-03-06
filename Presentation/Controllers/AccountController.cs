@@ -36,7 +36,7 @@ namespace Presentation.Controllers
 
             if (result.Succeed)
             {
-                await SignInWithCookie(result.Value!.Username);
+                await SignInWithCookie(result.Value!.UserId);
 
                 return Redirect("/");
             }
@@ -47,11 +47,11 @@ namespace Presentation.Controllers
             }
         }
 
-        private async Task SignInWithCookie(string username, List<string>? roles = null)
+        private async Task SignInWithCookie(Guid userId, List<string>? roles = null)
         {
             var claims = new List<Claim>
             {
-                new(ClaimTypes.Name, username)
+                new(ClaimTypes.NameIdentifier, userId.ToString())
             };
 
             if (roles != null)
@@ -90,7 +90,7 @@ namespace Presentation.Controllers
 
             if (result.Succeed)
             {
-                await SignInWithCookie(result.Value!.Username, result.Value!.Roles);
+                await SignInWithCookie(result.Value!.UserId, result.Value!.Roles);
                 return Redirect("/");
             }
             else
