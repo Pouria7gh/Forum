@@ -59,7 +59,7 @@ public class SignUp
 
             if (result > 0)
             {
-                return Result<SignUpDto>.Success(new() { Username = user.Username });
+                return Result<SignUpDto>.Success(new() { UserId = user.Id });
             }
             else
             {

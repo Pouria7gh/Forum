@@ -2,5 +2,5 @@
 
 public class SignUpDto
 {
-    public string Username { get; set; } = string.Empty;
+    public Guid UserId { get; set; }
 }

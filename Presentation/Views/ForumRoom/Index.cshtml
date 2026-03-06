@@ -1,8 +1,19 @@
 ﻿@using Application.DTOs.ForumRoom
+@using System.Security.Claims
 @model ForumRoomDto
+@{
+    bool userAuthenticated = (User.Identity != null && User.Identity.IsAuthenticated);
+    
+    string userId = "";
+    if (User.Identity != null && User.Identity.IsAuthenticated)
+    {
+        userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+    }
+}
 
+@Html.AntiForgeryToken()
 <div class="container mb-3 forum-room-container">
-    <div class="bg-body-secondary rounded mt-3 p-3">
+    <div class="bg-body-secondary rounded mt-3 mb-3 p-3">
         <h3>@Model.Title</h3>
         <p>@Model.Subtitle</p>
         <p>
@@ -15,8 +26,135 @@
         </div>
     </div>
 
+    <div id="forum-posts-container">
+        
+    </div>
 </div>
 
-<div class="container forum-posts-container">
-    
+
+<div class="container px-3 mt-4 mb-2">
+    <form id="forum-post-form" class="card container" >
+        <div class="card-header">
+            <span class="fs-5">Add Post</span>
+        </div>
+        <div class="card-body">
+            @if(!userAuthenticated)
+            {
+                <div class="alert alert-warning">
+                    You should sign in to add posts.
+                </div>
+            }
+            <div>
+                <label for="postContent" class="form-label">Post content:</label>
+                <textarea name="postContent" class="form-control" disabled="@(!userAuthenticated)"></textarea>
+            </div>
+            <div>
+                <label for="description" class="form-label">Description:</label>
+                <textarea name="description" class="form-control" disabled="@(!userAuthenticated)"></textarea>
+            </div>
+            <button class='btn btn-primary mt-2 @(!userAuthenticated ? "disabled" : "")'>Submit</button>
+        </div>
+    </form>
 </div>
+
+@section Scripts {
+<script>
+    const forumRoomId = "@Model.Id";
+
+    $(document).ready(() => {
+        getForumPosts();
+    });
+
+    const getForumPosts = () => {
+        $.ajax({
+            url: `/ForumPosts/${forumRoomId}`,
+            type: "GET",
+            dataType: "json",
+            headers: {
+                "RequestVerificationToken": getAntiforgeryToken()
+            },
+            success: function(data) {
+                if (data) {
+                    addForumPostsToPage(data);
+                }
+            }
+        })
+    }
+
+    const addForumPostsToPage = (forumPosts) => {
+        for(const post of forumPosts.values()) {
+            const element = getForumPostEl(post.userDisplayName, post.postContent, post.description);
+            $("#forum-posts-container").append(element);
+        }
+    }
+
+    const getForumPostEl = (userDisplayName, postContent, description) => {
+        let descriptionEl = "";
+        if (description) {
+            descriptionEl = `
+                <div class="bg-body-secondary p-2">
+                    ${description}
+                </div>
+            `;
+        }
+        return `<div class="border border-opacity-25 border-dark shadow-lg rounded-2 p-3 mb-2">
+                    <div class="fw-bold">
+                        ${userDisplayName}
+                    </div>
+                    <div class="mb-1">
+                        ${postContent}
+                    </div>
+                    ${descriptionEl}
+                </div>`;
+    }
+
+    const getAntiforgeryToken = () => {
+        return $('input[name="__RequestVerificationToken"]').val();
+    }
+
+</script>
+
+@if (userAuthenticated)
+{
+<script>
+    $(document).ready(() => {
+        attachEventListenerToForm();
+    });
+
+    const attachEventListenerToForm = () => {
+        $("#forum-post-form").submit((event) => {
+            event.preventDefault();
+            sendRequest();
+        })
+    }
+
+    const sendRequest = () => {
+        const requestDataJson = prepareRequestData();
+        $.ajax({
+            url: "/ForumPost/AddForumPost",
+            type: "Post",
+            contentType: "application/json",
+            data: requestDataJson,
+            headers: {
+                "RequestVerificationToken": $("input[name='__RequestVerificationToken']").val(),
+            },
+            success: function() {
+                window.location.reload();
+            },
+        });
+    }
+
+    const prepareRequestData = () => {
+        const userId = '@userId';
+        const data = {
+            postContent: $("textarea[name='postContent']").val(),
+            description: $("textarea[name='description']").val(),
+            userId: userId,
+            forumRoomId: '@Model.Id'
+        }
+
+        return JSON.stringify(data);
+    }
+</script>
+}
+}
