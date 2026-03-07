@@ -1,0 +1,44 @@
+﻿@using System.Security.Claims
+@using Forum.Web.Models.ForumPost
+@model AddForumPostViewModel
+@{
+    bool userAuthenticated = (User.Identity != null && User.Identity.IsAuthenticated);
+    bool formDisabled = !userAuthenticated;
+}
+
+<div class="container px-3 mt-4 mb-2">
+    <form id="forum-post-form" class="card container" method="post" asp-controller="ForumPost" asp-action="AddForumPost">
+        <div class="card-header">
+            <span class="fs-5">Add Post</span>
+        </div>
+        <div class="card-body">
+            @if (!userAuthenticated)
+            {
+                <div class="alert alert-warning">
+                    You should sign in to add posts.
+                </div>
+            }
+            <div>
+                <label for="PostContent" class="form-label">Post content:</label>
+                <textarea
+                    asp-for="PostContent"
+                    class="form-control"
+                    disabled="@formDisabled"
+                ></textarea>
+                <span class="text-danger" asp-validation-for="PostContent"></span>
+            </div>
+            <div>
+                <label for="Description" class="form-label">Description:</label>
+                <textarea
+                    asp-for="Description"
+                    class="form-control"
+                    disabled="@formDisabled"
+                ></textarea>
+                <span class="text-danger" asp-validation-for="Description"></span>
+            </div>
+            <input type="hidden" asp-for="ParentPostId" />
+            <input type="hidden" asp-for="ForumRoomId" value="@Model.ForumRoomId" />
+            <button class='btn btn-primary mt-2 @(!userAuthenticated ? "disabled" : "")'>Submit</button>
+        </div>
+    </form>
+</div>

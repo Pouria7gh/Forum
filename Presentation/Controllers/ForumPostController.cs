@@ -3,33 +3,15 @@ using Forum.Web.Models.ForumPost;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Controllers;
+using System.Security.Claims;
 
 namespace Forum.Web.Controllers;
 
 public class ForumPostController : BaseController
 {
-    [HttpGet("ForumPosts/{forumRoomId}")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> IndexAsync(Guid forumRoomId)
-    {
-        var query = new ListForumRoomPosts.Query() { ForumRoomId = forumRoomId };
-
-        var result = await Mediator.Send(query);
-
-        if (result.Succeed)
-        {
-            return Ok(result.Value);
-        }
-        else
-        {
-            return BadRequest(result.ErrorMessage);
-        }
-    }
-
     [HttpPost]
     [Authorize]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AddForumPost([FromBody] AddForumPostViewModel model)
+    public async Task<IActionResult> AddForumPost(AddForumPostViewModel model)
     {
         if (!ModelState.IsValid)
         {
@@ -38,17 +20,18 @@ public class ForumPostController : BaseController
 
         var command = new AddForumPost.Command()
         {
-            PostContent = model.PostContent,
-            Description = model.Description,
+            PostContent = model.PostContent.Trim(),
+            Description = model.Description?.Trim(),
             ForumRoomId = model.ForumRoomId,
-            UserId = model.UserId
+            UserId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value),
+            ParentPostId = model.ParentPostId
         };
 
         var result = await Mediator.Send(command);
 
         if (result.Succeed)
         {
-            return Ok();
+            return Redirect($"/ForumRoom/{model.ForumRoomId}");
         }
         else
         {

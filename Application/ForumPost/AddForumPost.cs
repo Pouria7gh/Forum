@@ -13,6 +13,7 @@ public class AddForumPost
         public Guid ForumRoomId { get; set; }
         public Guid UserId { get; set; }
         public string? Description { get; set; }
+        public Guid? ParentPostId { get; set; }
     }
 
     public class Handler : IRequestHandler<Command, Result<Unit>>
@@ -27,10 +28,11 @@ public class AddForumPost
         {
             ForumPost forumPost = new()
             {
-                PostContent = request.PostContent,
-                Description = request.Description,
+                PostContent = request.PostContent.Trim(),
+                Description = request.Description?.Trim(),
                 ForumRoomId = request.ForumRoomId,
-                UserId = request.UserId
+                UserId = request.UserId,
+                ParentPostId = request.ParentPostId
             };
 
             _dataContext.ForumPosts.Add(forumPost);

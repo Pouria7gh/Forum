@@ -1,15 +1,6 @@
 ﻿@using Application.DTOs.ForumRoom
-@using System.Security.Claims
+@using Forum.Web.Models.ForumPost
 @model ForumRoomDto
-@{
-    bool userAuthenticated = (User.Identity != null && User.Identity.IsAuthenticated);
-    
-    string userId = "";
-    if (User.Identity != null && User.Identity.IsAuthenticated)
-    {
-        userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-    }
-}
 
 @Html.AntiForgeryToken()
 <div class="container mb-3 forum-room-container">
@@ -26,135 +17,66 @@
         </div>
     </div>
 
-    <div id="forum-posts-container">
-        
-    </div>
+    @await Component.InvokeAsync("ListForumPosts", new {forumRoomId = Model.Id})
+    
 </div>
 
-
-<div class="container px-3 mt-4 mb-2">
-    <form id="forum-post-form" class="card container" >
-        <div class="card-header">
-            <span class="fs-5">Add Post</span>
-        </div>
-        <div class="card-body">
-            @if(!userAuthenticated)
-            {
-                <div class="alert alert-warning">
-                    You should sign in to add posts.
-                </div>
-            }
-            <div>
-                <label for="postContent" class="form-label">Post content:</label>
-                <textarea name="postContent" class="form-control" disabled="@(!userAuthenticated)"></textarea>
-            </div>
-            <div>
-                <label for="description" class="form-label">Description:</label>
-                <textarea name="description" class="form-control" disabled="@(!userAuthenticated)"></textarea>
-            </div>
-            <button class='btn btn-primary mt-2 @(!userAuthenticated ? "disabled" : "")'>Submit</button>
-        </div>
-    </form>
-</div>
+<partial name="_ForumPostForm" model="new AddForumPostViewModel() {ForumRoomId = Model.Id}" />
 
 @section Scripts {
 <script>
-    const forumRoomId = "@Model.Id";
-
-    $(document).ready(() => {
-        getForumPosts();
-    });
-
-    const getForumPosts = () => {
-        $.ajax({
-            url: `/ForumPosts/${forumRoomId}`,
-            type: "GET",
-            dataType: "json",
-            headers: {
-                "RequestVerificationToken": getAntiforgeryToken()
-            },
-            success: function(data) {
-                if (data) {
-                    addForumPostsToPage(data);
-                }
-            }
-        })
+    const prepareFormToReply = (button) => {
+        const userDisplayName = button.dataset.userDisplayName;
+        const shortPostContent = button.dataset.shortPostContent;
+        const parentPostId = button.dataset.parentPostId;
+        if (isFormReplying()) {
+            clearFormReply();
+        }
+        const alert = createReplyAlert(userDisplayName, shortPostContent);
+        addAlertToForm(alert);
+        $("input[name='ParentPostId']").val(parentPostId);
+        scrollToBottom();
     }
 
-    const addForumPostsToPage = (forumPosts) => {
-        for(const post of forumPosts.values()) {
-            const element = getForumPostEl(post.userDisplayName, post.postContent, post.description);
-            $("#forum-posts-container").append(element);
+    const isFormReplying = () => {
+        const parentPostId = $("input[name='ParentPostId']").val();
+
+        if (parentPostId) {
+            return true;
+        } else {
+            return false;
         }
     }
 
-    const getForumPostEl = (userDisplayName, postContent, description) => {
-        let descriptionEl = "";
-        if (description) {
-            descriptionEl = `
-                <div class="bg-body-secondary p-2">
-                    ${description}
+    const createReplyAlert = (userDisplayName, shortPostContent) => {
+        return `
+            <div id="forum-post-reply-alert" class="alert alert-info d-flex justify-content-between align-items-center">
+                <div>
+                    <span>Replying to ${userDisplayName}</span>
+                    <p>${shortPostContent}</p>
                 </div>
-            `;
-        }
-        return `<div class="border border-opacity-25 border-dark shadow-lg rounded-2 p-3 mb-2">
-                    <div class="fw-bold">
-                        ${userDisplayName}
-                    </div>
-                    <div class="mb-1">
-                        ${postContent}
-                    </div>
-                    ${descriptionEl}
-                </div>`;
+                <button class="btn btn-sm btn-danger" onClick="clearFormReply()" type="button">
+                    Cancel
+                </button>
+            </div>
+        `;
     }
 
-    const getAntiforgeryToken = () => {
-        return $('input[name="__RequestVerificationToken"]').val();
-    }
-
-</script>
-
-@if (userAuthenticated)
-{
-<script>
-    $(document).ready(() => {
-        attachEventListenerToForm();
-    });
-
-    const attachEventListenerToForm = () => {
-        $("#forum-post-form").submit((event) => {
-            event.preventDefault();
-            sendRequest();
-        })
-    }
-
-    const sendRequest = () => {
-        const requestDataJson = prepareRequestData();
-        $.ajax({
-            url: "/ForumPost/AddForumPost",
-            type: "Post",
-            contentType: "application/json",
-            data: requestDataJson,
-            headers: {
-                "RequestVerificationToken": $("input[name='__RequestVerificationToken']").val(),
-            },
-            success: function() {
-                window.location.reload();
-            },
+    const scrollToBottom = () => {
+        window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: 'smooth'
         });
     }
 
-    const prepareRequestData = () => {
-        const userId = '@userId';
-        const data = {
-            postContent: $("textarea[name='postContent']").val(),
-            description: $("textarea[name='description']").val(),
-            userId: userId,
-            forumRoomId: '@Model.Id'
-        }
-
-        return JSON.stringify(data);
+    const clearFormReply = () => {
+        $("#forum-post-reply-alert").remove();
+        $("input[name='parentPostId']").val("");
     }
+
+    const addAlertToForm = (alert) => {
+        $("#forum-post-form > .card-body").prepend(alert);
+    }
+
 </script>
-}
 }

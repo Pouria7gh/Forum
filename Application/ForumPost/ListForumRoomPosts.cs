@@ -29,9 +29,14 @@ public class ListForumRoomPosts
                 .OrderByDescending(x => x.CreatedAt)
                 .Select(x => new ForumPostDto()
                 {
+                    Id = x.Id,
                     Description = x.Description,
                     PostContent = x.PostContent,
-                    UserDisplayName = x.User!.DisplayName
+                    UserDisplayName = x.User != null ? x.User.DisplayName : null,
+                    ParentPostContent = x.ParentPost != null ? x.ParentPost.PostContent : null,
+                    ParentUserDisplayName = x.ParentPost != null && x.ParentPost.User != null
+                        ? x.ParentPost.User.DisplayName : null,
+                    CreatedAt = x.CreatedAt
                 });
 
             var result = await query.ToListAsync(cancellationToken);
