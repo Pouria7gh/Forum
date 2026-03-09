@@ -5,11 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Forum.Web.Components;
 
-public class ListForumPostsViewComponent : ViewComponent
+public class ListRoomPosts : ViewComponent
 {
     private readonly IMediator _mediator;
-
-    public ListForumPostsViewComponent(IMediator mediator)
+    public ListRoomPosts(IMediator mediator)
     {
         _mediator = mediator;
     }

@@ -1,0 +1,32 @@
+﻿@using Application.DTOs.ForumRoom
+@using Forum.Web.Models.ForumPost
+@model ForumPostDto
+
+<div class="container p-0 mb-3 forum-room-container">
+    <div class="bg-body-secondary rounded mt-3 mb-3 p-3">
+        <p class="fw-bold">
+            @Model.UserDisplayName
+        </p>
+        <p style="white-space: pre-wrap">@Model.PostContent</p>
+        <p>
+            @Model.Description
+        </p>
+        <p>
+            @Model.CreatedAt
+        </p>
+    </div>
+    
+    @await Component.InvokeAsync("ListPostReplies", new { parentPostId = Model.Id })
+
+</div>
+
+<partial name="_ForumPostForm" model="new AddForumPostViewModel() {ForumRoomId = Model.ForumRoomId, ParentPostId = Model.Id}" />
+
+@section Scripts
+{
+<script>
+    $(document).ready(function(){
+        $("#btn-forum-post-form").attr("name", "redirect-to-parent-post")
+    });
+</script>
+}

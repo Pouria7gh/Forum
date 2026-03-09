@@ -29,10 +29,10 @@ public class AddForumPost
             ForumPost forumPost = new()
             {
                 PostContent = request.PostContent.Trim(),
-                Description = request.Description?.Trim(),
                 ForumRoomId = request.ForumRoomId,
+                ParentPostId = request.ParentPostId,
                 UserId = request.UserId,
-                ParentPostId = request.ParentPostId
+                Description = request.Description?.Trim(),
             };
 
             _dataContext.ForumPosts.Add(forumPost);

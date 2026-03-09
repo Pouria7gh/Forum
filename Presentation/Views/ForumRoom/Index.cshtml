@@ -2,7 +2,6 @@
 @using Forum.Web.Models.ForumPost
 @model ForumRoomDto
 
-@Html.AntiForgeryToken()
 <div class="container mb-3 forum-room-container">
     <div class="bg-body-secondary rounded mt-3 mb-3 p-3">
         <h3>@Model.Title</h3>
@@ -15,68 +14,22 @@
             Rules:
             @Model.Rules
         </div>
+        <div class="mt-2 text-end">
+            <button data-bs-toggle="modal" data-bs-target="#form-modal" class="btn btn-sm btn-success">
+                Add Post
+                <i class="bi bi-pencil"></i>
+            </button>
+        </div>
     </div>
 
-    @await Component.InvokeAsync("ListForumPosts", new {forumRoomId = Model.Id})
+    <div id="form-modal" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <partial name="_ForumPostForm" model="new AddForumPostViewModel() {ForumRoomId = Model.Id}" />
+            </div>
+        </div>
+    </div>
+
+    @await Component.InvokeAsync("ListRoomPosts", new {forumRoomId = Model.Id})
     
 </div>
-
-<partial name="_ForumPostForm" model="new AddForumPostViewModel() {ForumRoomId = Model.Id}" />
-
-@section Scripts {
-<script>
-    const prepareFormToReply = (button) => {
-        const userDisplayName = button.dataset.userDisplayName;
-        const shortPostContent = button.dataset.shortPostContent;
-        const parentPostId = button.dataset.parentPostId;
-        if (isFormReplying()) {
-            clearFormReply();
-        }
-        const alert = createReplyAlert(userDisplayName, shortPostContent);
-        addAlertToForm(alert);
-        $("input[name='ParentPostId']").val(parentPostId);
-        scrollToBottom();
-    }
-
-    const isFormReplying = () => {
-        const parentPostId = $("input[name='ParentPostId']").val();
-
-        if (parentPostId) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    const createReplyAlert = (userDisplayName, shortPostContent) => {
-        return `
-            <div id="forum-post-reply-alert" class="alert alert-info d-flex justify-content-between align-items-center">
-                <div>
-                    <span>Replying to ${userDisplayName}</span>
-                    <p>${shortPostContent}</p>
-                </div>
-                <button class="btn btn-sm btn-danger" onClick="clearFormReply()" type="button">
-                    Cancel
-                </button>
-            </div>
-        `;
-    }
-
-    const scrollToBottom = () => {
-        window.scrollTo({
-            top: document.body.scrollHeight,
-            behavior: 'smooth'
-        });
-    }
-
-    const clearFormReply = () => {
-        $("#forum-post-reply-alert").remove();
-        $("input[name='parentPostId']").val("");
-    }
-
-    const addAlertToForm = (alert) => {
-        $("#forum-post-form > .card-body").prepend(alert);
-    }
-
-</script>
-}

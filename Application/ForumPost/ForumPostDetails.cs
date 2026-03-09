@@ -6,40 +6,38 @@ using Persistence.Providers;
 
 namespace Application.Forum;
 
-public class ListForumRoomPosts
+public class ForumPostDetails
 {
-    public class Query : IRequest<Result<List<ForumPostDto>>>
+    public class Query : IRequest<Result<ForumPostDto>>
     {
-        public Guid ForumRoomId { get; set; }
+        public Guid PostId { get; set; }
     }
 
-    public class Handler : IRequestHandler<Query, Result<List<ForumPostDto>>>
+    public class Handler : IRequestHandler<Query, Result<ForumPostDto>>
     {
         private readonly DataContext _dataContext;
-
         public Handler(DataContext dataContext)
         {
             _dataContext = dataContext;
         }
-
-        public async Task<Result<List<ForumPostDto>>> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Result<ForumPostDto>> Handle(Query request, CancellationToken cancellationToken)
         {
             var query = _dataContext.ForumPosts
-                .Where(x => x.ForumRoomId == request.ForumRoomId)
-                .Where(x => x.ParentPostId == null) // main posts
-                .OrderByDescending(x => x.CreatedAt)
+                .Where(x => x.Id == request.PostId)
                 .Select(x => new ForumPostDto()
                 {
                     Id = x.Id,
+                    CreatedAt = x.CreatedAt,
                     Description = x.Description,
                     PostContent = x.PostContent,
                     UserDisplayName = x.User != null ? x.User.DisplayName : null,
-                    CreatedAt = x.CreatedAt
+                    ForumRoomId = x.ForumRoomId,
                 }).AsNoTracking();
 
-            var result = await query.ToListAsync(cancellationToken);
+            var result = await query.FirstOrDefaultAsync(cancellationToken);
 
-            return Result<List<ForumPostDto>>.Success(result);
+            return result != null ? Result<ForumPostDto>.Success(result) : 
+                Result<ForumPostDto>.Failure("Post not found");
         }
     }
 }

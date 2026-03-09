@@ -6,8 +6,8 @@
     bool formDisabled = !userAuthenticated;
 }
 
-<div class="container px-3 mt-4 mb-2">
-    <form id="forum-post-form" class="card container" method="post" asp-controller="ForumPost" asp-action="AddForumPost">
+<div class="container p-0 my-2">
+    <form id="forum-post-form" class="card" method="post" asp-controller="ForumPost" asp-action="AddForumPost">
         <div class="card-header">
             <span class="fs-5">Add Post</span>
         </div>
@@ -36,9 +36,9 @@
                 ></textarea>
                 <span class="text-danger" asp-validation-for="Description"></span>
             </div>
-            <input type="hidden" asp-for="ParentPostId" />
+            <input type="hidden" asp-for="ParentPostId" value="@Model.ParentPostId" />
             <input type="hidden" asp-for="ForumRoomId" value="@Model.ForumRoomId" />
-            <button class='btn btn-primary mt-2 @(!userAuthenticated ? "disabled" : "")'>Submit</button>
+            <button id="btn-forum-post-form" class='btn btn-primary mt-2 @(!userAuthenticated ? "disabled" : "")'>Submit</button>
         </div>
     </form>
 </div>
