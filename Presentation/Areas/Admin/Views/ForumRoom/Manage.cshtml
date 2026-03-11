@@ -1,0 +1,58 @@
+﻿@using Forum.Web.Areas.Admin.Models.ForumRoom
+@model ManageForumRoomViewModel
+
+<div class="p-4">
+    <div class="card">
+        <div class="card-header fs-5 text-primary">@Model.Title</div>
+        <div class="card-body">
+            @Html.AntiForgeryToken()
+            <div>
+                <label for="isClosed">Is Closed:</label>
+                <input 
+                    id="isClosed" 
+                    name="isClosed" 
+                    type="checkbox"
+                    data-forum-room-id="@Model.Id"
+                    @(Model.IsClosed ? "Checked" : "") 
+                />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            attachEventListenerToIsClosedInput();
+        })
+
+        function attachEventListenerToIsClosedInput() {
+            $("#isClosed").on("input", async function(event) {
+                event.currentTarget.checked = !event.currentTarget.checked;
+                const term = event.currentTarget.checked ? "Open" : "Close";
+                const result = await AppConfirm.show("Confirm Action", `Are you sure you want to ${term} the room?`);
+                if (!result) return;
+                updateIsClosed(event.currentTarget.dataset.forumRoomId);
+            })
+        }
+
+        function updateIsClosed(forumRoomId) {
+            var antiForgeryToken = $("input[name='__RequestVerificationToken']").val();
+
+            $.ajax({
+                type: "Post",
+                url: `/Admin/ForumRoom/UpdateIsClosed`,
+                data: JSON.stringify(forumRoomId),
+                contentType: "application/json",
+                headers: {
+                    "RequestVerificationToken": antiForgeryToken,
+                },
+                success: function() {
+                    console.log("okey");
+                    const value = $("#isClosed").prop("checked");
+                    $("#isClosed").prop("checked", !value);
+                }
+            })
+        }
+    </script>
+}

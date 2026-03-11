@@ -1,4 +1,4 @@
-﻿@using Forum.Web.Areas.Admin.Models.Forum
+﻿@using Forum.Web.Areas.Admin.Models.ForumRoom
 @model List<ForumRoomViewModel>
 
 <div class="p-4 bg-primary text-light my-3">
@@ -10,7 +10,7 @@
         </div>
     </div>
 </div>
-<div class="container pt-3">
+<div class="container pt-3 home-container">
 @foreach (var forumRoom in Model)
 {
     <div class="flex position-relative border border-opacity-25 border-dark shadow-lg rounded-2 p-3 mb-2">
@@ -23,7 +23,11 @@
                 @forumRoom.Description
             </div>
         }
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-end align-items-center">
+            @if (forumRoom.IsClosed)
+            {
+                <span class="badge bg-warning text-dark p-2 me-auto">Room is closed by admin</span>
+            }
             <a href="/ForumRoom/@forumRoom.Id" class="btn btn-primary">View</a>
         </div>
         @if(forumRoom.IsPinned){

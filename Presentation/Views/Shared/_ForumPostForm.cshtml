@@ -1,18 +1,29 @@
 ﻿@using System.Security.Claims
+@using Application.Forum
 @using Forum.Web.Models.ForumPost
+@using MediatR
+@inject IMediator mediator
 @model AddForumPostViewModel
 @{
     bool userAuthenticated = (User.Identity != null && User.Identity.IsAuthenticated);
-    bool formDisabled = !userAuthenticated;
+    bool forumRoomClosed = (await mediator.Send(new ForumRoomClosed.Query() { ForumRoomId = Model.ForumRoomId })).Value;
+
+    bool formDisabled = !userAuthenticated || forumRoomClosed;
 }
 
-<div class="container p-0 my-2">
+<div class="container p-0">
     <form id="forum-post-form" class="card" method="post" asp-controller="ForumPost" asp-action="AddForumPost">
         <div class="card-header">
             <span class="fs-5">Add Post</span>
         </div>
         <div class="card-body">
-            @if (!userAuthenticated)
+            @if (forumRoomClosed)
+            {
+                <div class="alert alert-warning">
+                    Room is closed by admin.
+                </div>
+            }
+            else if (!userAuthenticated)
             {
                 <div class="alert alert-warning">
                     You should sign in to add posts.
@@ -38,7 +49,7 @@
             </div>
             <input type="hidden" asp-for="ParentPostId" value="@Model.ParentPostId" />
             <input type="hidden" asp-for="ForumRoomId" value="@Model.ForumRoomId" />
-            <button id="btn-forum-post-form" class='btn btn-primary mt-2 @(!userAuthenticated ? "disabled" : "")'>Submit</button>
+            <button id="btn-forum-post-form" class='btn btn-primary mt-2 @(formDisabled ? "disabled" : "")'>Submit</button>
         </div>
     </form>
 </div>

@@ -1,4 +1,4 @@
-﻿namespace Forum.Web.Areas.Admin.Models.Forum
+﻿namespace Forum.Web.Areas.Admin.Models.ForumRoom
 {
     public class ForumRoomViewModel
     {

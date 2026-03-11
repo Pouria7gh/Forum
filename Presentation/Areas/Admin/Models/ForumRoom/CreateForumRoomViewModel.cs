@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Presentation.Areas.Admin.Models.Forum;
+namespace Forum.Web.Areas.Admin.Models.ForumRoom;
 
 public class CreateForumRoomViewModel
 {

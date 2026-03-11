@@ -8,7 +8,6 @@
     <title>@ViewData["Title"] - Presentation</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Presentation.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/lib/bootstrap-icons/bootstrap-icons.min.css" />
 </head>
 <body>
@@ -33,7 +32,7 @@
                         <ul class="nav flex-column ms-4 mb-2">
                             <li class="nav-item">
                                 <a 
-                                    href="/Admin/Forum/CreateForumRoom"
+                                    href="/Admin/ForumRoom/CreateForumRoom"
                                     class="nav-link text-white-50 py-1 px-0"
                                 >
                                     Create Room
@@ -41,7 +40,7 @@
                             </li>
                             <li class="nav-item">
                                 <a 
-                                    href="/Admin/Forum/ListForumRooms"
+                                    href="/Admin/ForumRoom/ListForumRooms"
                                    class="nav-link text-white-50 py-1 px-0"
                                 >
                                     List Rooms
@@ -61,14 +60,18 @@
                         <i class="bi bi-list"></i>
                     </button>
                     <span class="ms-3 fw-semibold">Dashboard Overview</span>
-                    <div class="ms-auto">
-                        <a asp-controller="Account" asp-action="Logout" class="btn btn-sm btn-primary">Logout</a>
+                    <div class="ms-auto me-1">
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-sm btn-primary">Home</a>
+                    </div>
+                    <div>
+                        <a asp-controller="Account" asp-action="Logout" class="btn btn-sm btn-outline-primary">Logout</a>
                     </div>
                 </div>
             </nav>
             @RenderBody()
         </div>
     </div>
+    <partial name="_AppConfirmModal"/>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

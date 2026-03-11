@@ -1,5 +1,5 @@
 using Application.Forum;
-using Forum.Web.Areas.Admin.Models.Forum;
+using Forum.Web.Areas.Admin.Models.ForumRoom;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Models;
 using System.Diagnostics;
