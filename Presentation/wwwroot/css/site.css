@@ -76,3 +76,17 @@ html {
 .home-container {
     min-height: 55vh;
 }
+
+/* AppToast */
+
+#app-toast {
+    position: fixed;
+    top: 10vh;
+    right: 10px;
+}
+
+#app-toast-close-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}

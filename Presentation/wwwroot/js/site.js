@@ -91,3 +91,55 @@ class AppConfirm {
         this.bsModal.show();
     }
 }
+
+class AppToast {
+    toastElement;
+    toastCloseBtn;
+    titleElement;
+    subtitleElement;
+    bsToast;
+    constructor() {
+        this.toastElement = document.getElementById("app-toast");
+        this.toastCloseBtn = document.getElementById("app-toast-close-btn");
+        this.titleElement = document.getElementById("app-toast-title");
+        this.subtitleElement = document.getElementById("app-toast-subtitle");
+    }
+
+    static show(title, subtitle) {
+        if (!AppToast.instance) {
+            AppToast.instance = new AppToast();
+        }
+        AppToast.instance.showToast(title, subtitle);
+    }
+
+    showToast(title, subtitle) {
+        this.setToastContent(title, subtitle);    
+        this.createBsToast();
+        this.bsToast.show();
+        this.addEventListenerToCloseBtn();
+    }
+
+    setToastContent(title, subtitle) {
+        this.titleElement.innerText = title;
+        this.subtitleElement.innerText = subtitle;
+    }
+
+    createBsToast() {
+        if (this.bsToast) {
+            return;
+        }
+        this.bsToast = new bootstrap.Toast(this.toastElement, {
+            autohide: true,
+            animation: true,
+            delay: 4000,
+        });
+    }
+
+    addEventListenerToCloseBtn() {
+        this.toastCloseBtn.addEventListener("click", () => this.hideToast(this.bsToast))
+    }
+
+    hideToast(bsToast) {
+        bsToast.hide();
+    }
+}
