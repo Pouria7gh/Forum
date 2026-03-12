@@ -25,6 +25,7 @@ public class UpdateIsClosed
             if (room == null) return Result<Unit>.Failure("Room not found");
 
             room.IsClosed = !room.IsClosed;
+            room.UpdatedAt = DateTime.UtcNow;
 
             var result = await _dataContext.SaveChangesAsync();
 
