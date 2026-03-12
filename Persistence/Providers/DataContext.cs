@@ -17,6 +17,7 @@ public class DataContext : DbContext
     public DbSet<UserRole> UserRoles { get; set; }
     public DbSet<ForumRoom> ForumRooms { get; set; }
     public DbSet<ForumPost> ForumPosts { get; set; }
+    public DbSet<ForumPostInteraction> ForumPostInteractions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -119,6 +120,24 @@ public class DataContext : DbContext
             entity.HasOne(x => x.ParentPost)
                 .WithMany(x => x.Replies)
                 .HasForeignKey(x => x.ParentPostId);
+        });
+        #endregion
+
+        #region ForumPostInteraction
+        builder.Entity<ForumPostInteraction>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+
+            entity.HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(x => x.UserId);
+
+            entity.HasOne(x => x.ForumPost)
+                .WithMany(x => x.Interactions)
+                .HasForeignKey(x => x.ForumPostId);
+
+            entity.Property(x => x.Description)
+                .HasMaxLength(2048);
         });
         #endregion
     }
