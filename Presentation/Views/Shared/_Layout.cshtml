@@ -25,8 +25,21 @@
                         @if (User.Identity == null || !User.Identity.IsAuthenticated)
                         {
                         <li class="ms-auto">
-                            <a class="btn btn-primary me-1" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
-                            <a class="btn btn-outline-primary" asp-area="" asp-controller="Account" asp-action="SignUp">SignUp</a>
+                            <a class="btn btn-primary me-1" 
+                                asp-route-returnUrl="@Context.Request.Path" 
+                                asp-controller="Account" 
+                                asp-action="Login"
+                            >
+                                Login
+                            </a>
+                            <a 
+                                class="btn btn-outline-primary"
+                                asp-controller="Account"
+                                asp-action="SignUp"
+                                asp-route-returnUrl="@Context.Request.Path"
+                            >
+                                SignUp
+                            </a>
                         </li>
                         }
                         

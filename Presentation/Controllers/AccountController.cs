@@ -10,18 +10,19 @@ namespace Presentation.Controllers
     public class AccountController : BaseController
     {
         [HttpGet]
-        public IActionResult SignUp()
+        public IActionResult SignUp([FromQuery] string? returnUrl)
         {
             if (User.Identity == null || User.Identity.IsAuthenticated)
             {
-                return Redirect("/");
+                return Redirect(returnUrl ?? "/");
             }
 
+            ViewData["returnUrl"] = returnUrl ?? "/";
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> SignUp(SignUpViewModel model)
+        public async Task<IActionResult> SignUp(SignUpViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
                 return View(model);
@@ -43,7 +44,7 @@ namespace Presentation.Controllers
             await SignInWithCookie(result.Value!.UserId);
            
             SetSuccess("Signup Successful");
-            return Redirect("/");
+            return Redirect(returnUrl);
         }
 
         private async Task SignInWithCookie(Guid userId, List<string>? roles = null)
@@ -68,18 +69,19 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login([FromQuery] string? returnUrl)
         {
             if (User.Identity != null && User.Identity.IsAuthenticated)
             {
-                return Redirect("/");
+                return Redirect(returnUrl ?? "/");
             }
 
+            ViewData["returnUrl"] = returnUrl ?? "/";
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl)
         {
             var result = await Mediator.Send(new Login.Command()
             {
@@ -96,7 +98,7 @@ namespace Presentation.Controllers
             await SignInWithCookie(result.Value!.UserId, result.Value!.Roles);
 
             SetSuccess("Login successful");
-            return Redirect("/");
+            return Redirect(returnUrl);
             
         }
 
