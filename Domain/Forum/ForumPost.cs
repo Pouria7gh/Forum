@@ -15,7 +15,7 @@ namespace Domain.Forum
         public Guid? ParentPostId { get; set; }
         public ForumPost? ParentPost { get; set; }
         #endregion
-
+        public List<ForumPostInteraction> Interactions { get; set; } = [];
         public List<ForumPost>? Replies { get; set; }
         public string? Description { get; set; }
         public bool IsDisabled { get; set; } = false;

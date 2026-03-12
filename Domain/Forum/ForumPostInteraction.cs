@@ -4,8 +4,9 @@ namespace Domain.Forum
 {
     public class ForumPostInteraction : BaseEntity
     {
-        public Guid? UserId { get; set; }
-        public virtual AppUser? User { get; set; }
+        public Guid UserId { get; set; }
+        public AppUser? User { get; set; }
+        public Guid ForumPostId { get; set; }
         public virtual ForumPost ForumPost { get; set; } = default!;
         public bool IsLiked { get; set; }
         public bool IsDisliked { get; set; }
