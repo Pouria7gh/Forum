@@ -9,6 +9,8 @@
     bool forumRoomClosed = (await mediator.Send(new ForumRoomClosed.Query() { ForumRoomId = Model.ForumRoomId })).Value;
 
     bool formDisabled = !userAuthenticated || forumRoomClosed;
+
+    string returnUrl = Context.Request.Path;
 }
 
 <div class="container p-0">
@@ -49,7 +51,8 @@
             </div>
             <input type="hidden" asp-for="ParentPostId" value="@Model.ParentPostId" />
             <input type="hidden" asp-for="ForumRoomId" value="@Model.ForumRoomId" />
-            <button id="btn-forum-post-form" class='btn btn-primary mt-2 @(formDisabled ? "disabled" : "")'>Submit</button>
+            <input type="hidden" name="returnUrl" value="@returnUrl" />
+            <button class='btn btn-primary mt-2 @(formDisabled ? "disabled" : "")'>Submit</button>
         </div>
     </form>
 </div>

@@ -42,16 +42,14 @@ public class ForumRoomController : BaseAdminController
         {
             if (continueEditing)
             {
-                return View(model);
+                return Redirect($"/Admin/ForumRoom/Manage/{forumRoomId}");
             }
-            else
-            {
-                return Redirect("/Admin/ForumRoom/ListForumRooms");
-            }
+
+            return Redirect("/Admin/ForumRoom/ListForumRooms");
         }
         else
         {
-            ViewData["Error"] = result.ErrorMessage;
+            SetError(result.ErrorMessage!);
             return View(model);
         }
     }
@@ -90,7 +88,7 @@ public class ForumRoomController : BaseAdminController
         var query = new GetForumRoomManageModel.Query() { Id = id };
         var result = await Mediator.Send(query);
 
-        if (!result.Succeed) return BadRequest();
+        if (!result.Succeed) return NotFound(result.ErrorMessage);
 
         var model = new ManageForumRoomViewModel()
         {

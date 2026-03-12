@@ -48,9 +48,12 @@
                     "RequestVerificationToken": antiForgeryToken,
                 },
                 success: function() {
-                    console.log("okey");
                     const value = $("#isClosed").prop("checked");
                     $("#isClosed").prop("checked", !value);
+                    AppToast.show("Success", "Room updated successfully.");
+                },
+                error: function(error) {
+                    AppToast.show("Error", error.responseText);
                 }
             })
         }

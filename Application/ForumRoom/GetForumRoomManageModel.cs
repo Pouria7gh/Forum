@@ -34,7 +34,7 @@ public class GetForumRoomManageModel
             var result = await query.FirstOrDefaultAsync(cancellationToken);
 
             return result != null ? Result<ForumRoomManageDto>.Success(result) :
-                Result<ForumRoomManageDto>.Success(new());
+                Result<ForumRoomManageDto>.Failure("Room not found.");
         }
     }
 }

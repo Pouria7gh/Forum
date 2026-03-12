@@ -1,6 +1,4 @@
-﻿using Application.DTOs.ForumRoom;
-using Application.Forum;
-using Forum.Web.Framework.Mvc.Filters;
+﻿using Application.Forum;
 using Forum.Web.Models.ForumPost;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,8 +11,7 @@ public class ForumPostController : BaseController
 {
     [HttpPost]
     [Authorize]
-    [ParameterBasedOnFormName("redirect-to-parent-post", "redirectToParentPost")]
-    public async Task<IActionResult> AddForumPost(AddForumPostViewModel model, bool redirectToParentPost)
+    public async Task<IActionResult> AddForumPost(AddForumPostViewModel model, string returnUrl)
     {
         if (!ModelState.IsValid)
         {
@@ -32,19 +29,15 @@ public class ForumPostController : BaseController
 
         var result = await Mediator.Send(command);
 
-        if (!result.Succeed)
+        if (result.Succeed)
         {
-            return BadRequest(result.ErrorMessage);
-        }
-
-        if (redirectToParentPost)
-        {
-            return Redirect($"/ForumPost/{model.ParentPostId}");
+            SetSuccess("Post Added Successfully");
         }
         else
         {
-            return Redirect($"/ForumRoom/{model.ForumRoomId}");
+            SetError(result.ErrorMessage!);
         }
+        return Redirect(returnUrl);
     }
 
     [HttpGet("/ForumPost/{postId}")]
@@ -59,7 +52,7 @@ public class ForumPostController : BaseController
         }
         else
         {
-            return View(new ForumPostDto());
+            return NotFound();
         }
     }
 }

@@ -113,10 +113,21 @@ class AppToast {
     }
 
     showToast(title, subtitle) {
+        this.setToastStyle(title);
         this.setToastContent(title, subtitle);    
         this.createBsToast();
         this.bsToast.show();
         this.addEventListenerToCloseBtn();
+    }
+
+    setToastStyle(title) {
+        if (title === "Error") {
+            this.toastElement.classList.remove("bg-success", "text-light");
+            this.toastElement.classList.add("bg-warning", "text-dark");
+        } else if (title === "Success") {
+            this.toastElement.classList.remove("bg-warning", "text-dark");
+            this.toastElement.classList.add("bg-success", "text-light");
+        }
     }
 
     setToastContent(title, subtitle) {

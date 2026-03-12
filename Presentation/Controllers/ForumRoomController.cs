@@ -12,6 +12,11 @@ public class ForumRoomController : BaseController
         var query = new GetForumRoom.Query() { ForumRoomId = id };
         var result = await Mediator.Send(query);
 
-        return View(result.Value);
+        if (result.Succeed)
+        {
+            return View(result.Value);
+        }
+
+        return NotFound();
     }
 }

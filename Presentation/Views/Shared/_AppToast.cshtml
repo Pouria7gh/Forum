@@ -1,4 +1,4 @@
-﻿<div id="app-toast" class="toast bg-warning text-dark">
+﻿<div id="app-toast" class="toast">
     <div id="app-toast-title" class="toast-Header pt-1 ps-2 fs-5">
     </div>
     <div id="app-toast-subtitle" class="toast-body fs-6 pt-0 mt-0">
@@ -6,3 +6,20 @@
     <button id="app-toast-close-btn" class="btn btn-sm btn-close">
     </button>
 </div>
+
+@if (TempData["Error"] != null)
+{
+    <script>
+        $(document).ready(function() {
+            AppToast.show("Error", '@TempData["Error"]');
+        })
+    </script>
+}
+else if (TempData["Success"] != null)
+{
+    <script>
+        $(document).ready(function() {
+            AppToast.show("Success", '@TempData["Success"]');
+        })
+    </script>
+}

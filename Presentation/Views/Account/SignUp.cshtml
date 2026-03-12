@@ -29,12 +29,6 @@
                 <input class="form-control" autocomplete="off" type="password" asp-for="Password" />
                 <span class="text-danger" asp-validation-for="Password"></span>
             </div>
-            @if (ViewData.Keys.Contains("Error"))
-            {
-                <div class="alert alert-danger my-3">
-                    @ViewData["Error"]
-                </div>
-            }
             <button class="btn btn-primary me-auto">Submit</button>
         </form>
     </div>

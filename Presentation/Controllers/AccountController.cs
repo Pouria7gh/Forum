@@ -34,17 +34,16 @@ namespace Presentation.Controllers
                 Password = model.Password
             });
 
-            if (result.Succeed)
+            if (!result.Succeed)
             {
-                await SignInWithCookie(result.Value!.UserId);
-
-                return Redirect("/");
-            }
-            else
-            {
-                ViewData["Error"] = result.ErrorMessage;
+                SetError(result.ErrorMessage!);
                 return View(model);
             }
+
+            await SignInWithCookie(result.Value!.UserId);
+           
+            SetSuccess("Signup Successful");
+            return Redirect("/");
         }
 
         private async Task SignInWithCookie(Guid userId, List<string>? roles = null)
@@ -88,16 +87,17 @@ namespace Presentation.Controllers
                 Password = model.Password
             });
 
-            if (result.Succeed)
+            if (!result.Succeed)
             {
-                await SignInWithCookie(result.Value!.UserId, result.Value!.Roles);
-                return Redirect("/");
-            }
-            else
-            {
-                ViewData["Error"] = result.ErrorMessage;
+                SetError(result.ErrorMessage!);
                 return View("Login", model);
             }
+
+            await SignInWithCookie(result.Value!.UserId, result.Value!.Roles);
+
+            SetSuccess("Login successful");
+            return Redirect("/");
+            
         }
 
         [HttpGet]

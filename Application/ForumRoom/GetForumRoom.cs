@@ -38,7 +38,8 @@ public class GetForumRoom
 
             var ForumRoomDto = await query.FirstOrDefaultAsync(cancellationToken);
 
-            return Result<ForumRoomDto>.Success(ForumRoomDto!);
+            return ForumRoomDto != null ? Result<ForumRoomDto>.Success(ForumRoomDto) :
+                Result<ForumRoomDto>.Failure("Room not found");
         }
     }
 }
