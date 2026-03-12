@@ -40,6 +40,8 @@ public class ForumRoomController : BaseAdminController
 
         if (result.Succeed)
         {
+            SetSuccess("Room Created Successfully.");
+
             if (continueEditing)
             {
                 return Redirect($"/Admin/ForumRoom/Manage/{forumRoomId}");
