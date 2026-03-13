@@ -55,4 +55,24 @@ public class ForumPostController : BaseController
             return NotFound();
         }
     }
+
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddInteraction([FromBody] AddPostInteraction.Command command)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Problem Adding Interaction.");
+        }
+
+        var result = await Mediator.Send(command);
+
+        if (result.Succeed)
+        {
+            return Ok();
+        }
+
+        return BadRequest(result.ErrorMessage);
+    }
 }

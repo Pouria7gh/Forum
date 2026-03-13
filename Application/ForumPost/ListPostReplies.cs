@@ -1,5 +1,6 @@
 ﻿using Application.Core;
 using Application.DTOs.ForumRoom;
+using Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Providers;
@@ -16,12 +17,15 @@ public class ListPostReplies
     public class Handler : IRequestHandler<Query, Result<List<ForumPostDto>>>
     {
         private readonly DataContext _dataContext;
-        public Handler(DataContext dataContext)
+        private readonly UserAccessor _userAccessor;
+        public Handler(DataContext dataContext, UserAccessor userAccessor)
         {
             _dataContext = dataContext;
+            _userAccessor = userAccessor;
         }
         public async Task<Result<List<ForumPostDto>>> Handle(Query request, CancellationToken cancellationToken)
         {
+            var userId = _userAccessor.GetUserId();
             var query = _dataContext.ForumPosts
                 .Where(x => x.ParentPostId == request.ParentPostId)
                 .OrderBy(x => x.CreatedAt)
@@ -32,7 +36,11 @@ public class ListPostReplies
                     ForumRoomId = x.ForumRoomId,
                     Id = x.Id,
                     PostContent = x.PostContent,
-                    UserDisplayName = x.User != null ? x.User.DisplayName : null
+                    UserDisplayName = x.User != null ? x.User.DisplayName : null,
+                    LikeCount = x.Interactions.Count(x => x.IsLiked),
+                    DislikeCount = x.Interactions.Count(x => x.IsDisliked),
+                    IsLiked = userId != null ? x.Interactions.Any(x => x.UserId == userId && x.IsLiked) : false,
+                    IsDisliked = userId != null ? x.Interactions.Any(x => x.UserId == userId && x.IsDisliked) : false,
                 });
 
             var result = await query.ToListAsync(cancellationToken);

@@ -2,6 +2,7 @@
 @model List<ForumPostDto>
 
 <div class="forum-posts-container">
+    @Html.AntiForgeryToken()
     @foreach(var post in Model)
     {
         <div class="border border-opacity-25 border-dark shadow-lg rounded-2 p-3 mb-2">
@@ -18,7 +19,42 @@
                     @post.Description
                 </div>
             }
-            <div class="mt-2 text-end">
+            <div class="mt-2 d-flex align-items-center">
+                <div class="me-auto">
+                    @post.ViewCount <i class="bi-eye"></i>
+                </div>
+                <div class="me-2">
+                    <button 
+                        class="btn-like-post btn btn-sm btn-light @(post.IsLiked ? "active-interaction" : "")"
+                        data-forum-post-id="@post.Id"
+                    >
+                        @if (post.IsLiked)
+                        {
+                            <i class="bi-hand-thumbs-up-fill"></i>
+                        }
+                        else
+                        {
+                            <i class="bi-hand-thumbs-up"></i> 
+                        }
+                    </button>
+                    <span class="interaction-count">@post.LikeCount</span>
+                </div>
+                <div class="me-3">
+                    <button
+                        class="btn-dislike-post btn btn-sm btn-light @(post.IsDisliked ? "active-interaction" : "")"
+                        data-forum-post-id="@post.Id"
+                    >
+                        @if (post.IsDisliked)
+                        {
+                            <i class="bi-hand-thumbs-down-fill"></i>
+                        }
+                        else
+                        {
+                            <i class="bi-hand-thumbs-down"></i>
+                        }
+                    </button>
+                    <span class="interaction-count">@post.DislikeCount</span>
+                </div>
                 <a href="/ForumPost/@post.Id" class="btn btn-primary">View</a>
             </div>
         </div>

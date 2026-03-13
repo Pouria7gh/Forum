@@ -154,3 +154,65 @@ class AppToast {
         bsToast.hide();
     }
 }
+
+// Like & Dislike buttons
+$(document).ready(() => {
+    $(".btn-like-post").on("click", () => handleInteraction(event, true));
+    $(".btn-dislike-post").on("click", () => handleInteraction(event, false));
+
+    function handleInteraction(event, predicate) {
+        const button = event.currentTarget;
+        const data = {
+            forumPostId: button.dataset.forumPostId,
+            isLiked: predicate ? true : false,
+            isDisliked: predicate ? false : true,
+        };
+
+        const antiforgeryToken = $('input[name="__RequestVerificationToken"]').val();
+
+        $.ajax({
+            url: "/ForumPost/AddInteraction",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            headers: {
+                "RequestVerificationToken" : antiforgeryToken,
+            },
+            success: function () {
+                if ($(button).hasClass("active-interaction")) {
+                    deactivateButton($(button), predicate);
+                }
+                else {
+                    let otherButton = $(`.active-interaction[data-forum-post-id="${data.forumPostId}"]`);
+                    deactivateButton(otherButton, !predicate);
+                    activateButton($(button), predicate);
+                }
+            },
+            error: function (error) {
+                if (error.status === 401) {
+                    AppToast.show("Error", `You should sign in to ${predicate ? "like" : "dislike"} the post.`)
+                } else {
+                    AppToast.show("Error", error.responseText);
+                }
+            }
+        })
+    }
+
+    function deactivateButton(element, predicate) {
+        const iconClassName = predicate ? "bi-hand-thumbs-up" : "bi-hand-thumbs-down";
+        element.removeClass("active-interaction");
+        element.children("i").removeClass(iconClassName + "-fill");
+        element.children("i").addClass(iconClassName);
+        const count = $(element).siblings(".interaction-count").text();
+        element.siblings(".interaction-count").text(Number(count) - 1)
+    }
+
+    function activateButton(element, predicate) {
+        const iconClassName = predicate ? "bi-hand-thumbs-up" : "bi-hand-thumbs-down";
+        element.addClass("active-interaction");
+        element.children("i").addClass(iconClassName + "-fill");
+        element.children("i").removeClass(iconClassName);
+        const count = $(element).siblings(".interaction-count").text();
+        element.siblings(".interaction-count").text(Number(count) + 1)
+    }
+});

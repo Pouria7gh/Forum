@@ -9,6 +9,8 @@ namespace Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
             services.AddScoped<PasswordService, PasswordServiceImp>();
+            services.AddHttpContextAccessor();
+            services.AddScoped<UserAccessor, UserAccessorImp>();
 
             return services;
         }
