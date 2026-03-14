@@ -44,6 +44,7 @@ public class ListForumRoomPosts
                     ViewCount = x.Interactions.Count(x => !x.IsLiked && !x.IsDisliked),
                     IsLiked = userId != null ? x.Interactions.Any(x => x.UserId == userId && x.IsLiked) : false,
                     IsDisliked = userId != null ? x.Interactions.Any(x => x.UserId == userId && x.IsDisliked) : false,
+                    ReplyCount = x.Replies != null ? x.Replies.Count() : 0
                 }).AsNoTracking();
 
             var result = await query.ToListAsync(cancellationToken);
