@@ -1,4 +1,8 @@
 ﻿@using Presentation.Constraints
+@{
+    bool userAuthenticated = User.Identity != null && User.Identity.IsAuthenticated;
+    string returnUrl = Context.Request.Path;
+}
 <!DOCTYPE html>
 <html id="html" lang="en">
 <head>
@@ -18,14 +22,13 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
+                    <ul class="navbar-nav flex-grow-1 align-items-center">
+                        <li class="nav-item me-auto">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        @if (User.Identity == null || !User.Identity.IsAuthenticated)
+                        @if (!userAuthenticated)
                         {
-                        <li class="ms-auto">
-                            <a class="btn btn-primary me-1" 
+                            <a class="btn btn-sm btn-primary me-1" 
                                 asp-route-returnUrl="@Context.Request.Path" 
                                 asp-controller="Account" 
                                 asp-action="Login"
@@ -33,21 +36,29 @@
                                 Login
                             </a>
                             <a 
-                                class="btn btn-outline-primary"
+                                class="btn btn-sm btn-outline-primary"
                                 asp-controller="Account"
                                 asp-action="SignUp"
                                 asp-route-returnUrl="@Context.Request.Path"
                             >
                                 SignUp
                             </a>
-                        </li>
                         }
                         
-                        @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole(RoleNames.ADMIN))
+                        @if (userAuthenticated && User.IsInRole(RoleNames.ADMIN))
                         {
-                        <li class="ms-auto">
-                            <a class="btn btn-primary me-1" href="/Admin">Dashboard</a>
-                        </li>
+                            <a class="btn btn-sm btn-primary me-1" href="/Admin">Dashboard</a>
+                        }
+
+                        @if (userAuthenticated)
+                        {
+                            <a
+                                asp-controller="Account"
+                                asp-action="Logout"
+                                asp-route-returnUrl="@returnUrl"
+                                class="btn btn-sm btn-primary">
+                                Logout
+                            </a>
                         }
                     </ul>
                 </div>

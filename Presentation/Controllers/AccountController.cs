@@ -103,11 +103,12 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> Logout(string returnUrl)
         {
             await HttpContext.SignOutAsync();
 
-            return Redirect("/");
+            SetSuccess("Logout Successfull");
+            return Redirect(returnUrl ?? "/");
         }
     }
 }
