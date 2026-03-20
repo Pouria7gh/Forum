@@ -43,7 +43,7 @@ public class ForumPostController : BaseController
     [HttpGet("/ForumPost/{postId}")]
     public async Task<IActionResult> IndexAsync(Guid postId)
     {
-        await Mediator.Send(new AddPostView.Query() { ForumPostId = postId });
+        await Mediator.Send(new AddPostView.Command() { ForumPostId = postId });
 
         ForumPostDetails.Query query = new() { PostId = postId };
         var result = await Mediator.Send(query);
