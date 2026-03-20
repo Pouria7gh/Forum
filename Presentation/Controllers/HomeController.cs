@@ -1,8 +1,10 @@
+using Application.Core;
 using Application.Forum;
 using Forum.Web.Areas.Admin.Models.ForumRoom;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Models;
 using System.Diagnostics;
+using Forum.Web.Framework.Pagination;
 
 namespace Presentation.Controllers
 {
@@ -15,26 +17,16 @@ namespace Presentation.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(PagingParams pagingParams)
         {
-            ListForumRooms.Query query = new();
+            ListForumRooms.Query query = new() { pagingParams = pagingParams };
 
             var result = await Mediator.Send(query);
 
             if (result.Succeed)
             {
-                var forumRooms = result.Value!.Select(x => new ForumRoomViewModel()
-                {
-                    Id = x.Id,
-                    Description = x.Description,
-                    IsClosed = x.IsClosed,
-                    IsPinned = x.IsPinned,
-                    Rules = x.Rules,
-                    Subtitle = x.Subtitle,
-                    Title = x.Title
-                }).ToList();
-
-                return View(forumRooms);
+                HttpContext.AddPaginationHeader(result.Value!);
+                return View(result.Value);
             }
             else
             {

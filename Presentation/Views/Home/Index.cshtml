@@ -1,5 +1,5 @@
-﻿@using Forum.Web.Areas.Admin.Models.ForumRoom
-@model List<ForumRoomViewModel>
+﻿@using Application.DTOs.ForumRoom
+@model List<ForumRoomDto>
 
 <div class="p-4 bg-primary text-light my-3">
     <div class="container">
@@ -42,4 +42,5 @@
         Forum Rooms will apear here
     </div>
 }
+<partial name="_Pagination"/>
 </div>

@@ -1,19 +1,18 @@
 ﻿using Application.Core;
 using Application.DTOs.ForumRoom;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Persistence.Providers;
 
 namespace Application.Forum;
 
 public class ListForumRooms
 {
-    public class Query : IRequest<Result<List<ForumRoomDto>>>
+    public class Query : IRequest<Result<PagedList<ForumRoomDto>>>
     {
-
+        public PagingParams pagingParams { get; set; } = new();
     }
 
-    public class Handler : IRequestHandler<Query, Result<List<ForumRoomDto>>>
+    public class Handler : IRequestHandler<Query, Result<PagedList<ForumRoomDto>>>
     {
         private readonly DataContext _dataContext;
 
@@ -21,7 +20,7 @@ public class ListForumRooms
         {
             _dataContext = dataContext;
         }
-        public async Task<Result<List<ForumRoomDto>>> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Result<PagedList<ForumRoomDto>>> Handle(Query request, CancellationToken cancellationToken)
         {
             var query = _dataContext.ForumRooms
                 .OrderByDescending(x => x.IsPinned)
@@ -37,9 +36,10 @@ public class ListForumRooms
                     Title = x.Title
                 });
 
-            var forumRooms = await query.ToListAsync(cancellationToken);
+            var forumRooms = await PagedList<ForumRoomDto>
+                .CreateAsync(query, request.pagingParams.CurrentPage, request.pagingParams.PageSize);
 
-            return Result<List<ForumRoomDto>>.Success(forumRooms);
+            return Result<PagedList<ForumRoomDto>>.Success(forumRooms);
         }
     }
 }

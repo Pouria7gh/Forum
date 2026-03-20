@@ -1,0 +1,40 @@
+﻿@using Forum.Web.Framework.Pagination;
+@using Forum.Web.Framework.Path;
+@{
+    bool paginationExists = Context.TryGetPaginationFromHeaders(out Pagination? pagination);
+    if (!paginationExists) return;
+
+    string path = Context.Request.Path.ToString() + Context.Request.QueryString;
+    path = path.RemoveQueryParams("CurrentPage");
+    if (path.ContainsQueryParams())
+    {
+        path += "&CurrentPage=";
+    }
+    else
+    {
+        path += "?CurrentPage=";
+    }
+}
+
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        <li class="page-item">
+            <a class="page-link @(pagination!.CurrentPage == 1 ? "disabled" : "")" 
+                href="@(path + (pagination!.CurrentPage - 1))">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        @for (int i = 1; i <= pagination.TotalPages; i++)
+        {
+            <li class="page-item">
+                <a class="page-link @(pagination.CurrentPage == i ? "active" : "")" href="@(path + i)">@i</a>
+            </li>
+        }
+        <li class="page-item">
+            <a class="page-link @(pagination.CurrentPage == pagination.TotalPages ? "disabled" : "")"
+               href="@(path + (pagination!.CurrentPage + 1))">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
