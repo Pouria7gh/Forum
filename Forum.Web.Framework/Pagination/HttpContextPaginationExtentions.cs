@@ -32,4 +32,24 @@ public static class HttpContextPaginationExtentions
         pagination = null;
         return false;
     }
+
+    public static PagingParams GetPagingParamsFromQuery(this HttpContext httpContext)
+    {
+        var query = httpContext.Request.Query;
+        string currentPage = query["CurrentPage"].ToString();
+        string pageSize = query["PageSize"].ToString();
+
+        PagingParams pagingParams = new();
+
+        if (!string.IsNullOrEmpty(currentPage) && int.TryParse(currentPage, out int currentPageNum))
+        {
+            pagingParams.CurrentPage = currentPageNum;
+        }
+
+        if (!string.IsNullOrEmpty(pageSize) && int.TryParse(pageSize, out int pageSizeNum))
+        {
+            pagingParams.PageSize = pageSizeNum;
+        }
+        return pagingParams;
+    }
 }

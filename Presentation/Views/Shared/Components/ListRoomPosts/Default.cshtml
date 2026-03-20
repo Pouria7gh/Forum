@@ -1,5 +1,6 @@
-﻿@using Application.DTOs.ForumRoom
-@model List<ForumPostDto>
+﻿@using Application.Core
+@using Application.DTOs.ForumRoom
+@model PagedList<ForumPostDto>
 
 <div class="forum-posts-container">
     @Html.AntiForgeryToken()
@@ -63,3 +64,5 @@
         </div>
     }
 </div>
+
+<partial name="_Pagination"/>

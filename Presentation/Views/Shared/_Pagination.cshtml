@@ -3,6 +3,8 @@
 @{
     bool paginationExists = Context.TryGetPaginationFromHeaders(out Pagination? pagination);
     if (!paginationExists) return;
+    if (pagination!.TotalPages == 0) return;
+    if (pagination!.TotalPages == 1) return;
 
     string path = Context.Request.Path.ToString() + Context.Request.QueryString;
     path = path.RemoveQueryParams("CurrentPage");

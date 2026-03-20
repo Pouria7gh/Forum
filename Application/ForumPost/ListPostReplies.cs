@@ -9,12 +9,13 @@ namespace Application.Forum;
 
 public class ListPostReplies
 {
-    public class Query : IRequest<Result<List<ForumPostDto>>>
+    public class Query : IRequest<Result<PagedList<ForumPostDto>>>
     {
         public Guid ParentPostId { get; set; }
+        public PagingParams PagingParams { get; set; } = new();
     }
 
-    public class Handler : IRequestHandler<Query, Result<List<ForumPostDto>>>
+    public class Handler : IRequestHandler<Query, Result<PagedList<ForumPostDto>>>
     {
         private readonly DataContext _dataContext;
         private readonly UserAccessor _userAccessor;
@@ -23,7 +24,7 @@ public class ListPostReplies
             _dataContext = dataContext;
             _userAccessor = userAccessor;
         }
-        public async Task<Result<List<ForumPostDto>>> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Result<PagedList<ForumPostDto>>> Handle(Query request, CancellationToken cancellationToken)
         {
             var userId = _userAccessor.GetUserId();
             var query = _dataContext.ForumPosts
@@ -43,10 +44,10 @@ public class ListPostReplies
                     IsDisliked = userId != null ? x.Interactions.Any(x => x.UserId == userId && x.IsDisliked) : false,
                 });
 
-            var result = await query.ToListAsync(cancellationToken);
+            var result = await PagedList<ForumPostDto>.CreateAsync(query,
+                request.PagingParams.CurrentPage, request.PagingParams.PageSize);
 
-            return result != null ? Result<List<ForumPostDto>>.Success(result) :
-                Result<List<ForumPostDto>>.Success([]);
+            return Result<PagedList<ForumPostDto>>.Success(result);
         }
     }
 }
