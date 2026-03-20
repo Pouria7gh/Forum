@@ -8,12 +8,12 @@ namespace Application.Forum;
 
 public class AddPostView
 {
-    public class Command : IRequest<Result<Unit>>
+    public class Query : IRequest<Result<Unit>>
     {
         public Guid ForumPostId { get; set; }
     }
 
-    public class Handler : IRequestHandler<Command, Result<Unit>>
+    public class Handler : IRequestHandler<Query, Result<Unit>>
     {
         private readonly DataContext _dataContext;
         private readonly UserAccessor _userAccessor;
@@ -22,7 +22,7 @@ public class AddPostView
             _dataContext = dataContext;
             _userAccessor = userAccessor;
         }
-        public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(Query request, CancellationToken cancellationToken)
         {
             var userId = _userAccessor.GetUserId();
             ForumPostInteraction interaction = new()
