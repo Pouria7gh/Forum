@@ -28,7 +28,7 @@
                         </li>
                         @if (!userAuthenticated)
                         {
-                            <a class="btn btn-sm btn-primary me-1" 
+                            <a class="btn btn-sm btn-primary me-1 d-none d-sm-inline-block"
                                 asp-route-returnUrl="@Context.Request.Path" 
                                 asp-controller="Account" 
                                 asp-action="Login"
@@ -36,18 +36,44 @@
                                 Login
                             </a>
                             <a 
-                                class="btn btn-sm btn-outline-primary"
+                                class="btn btn-sm btn-outline-primary d-none d-sm-inline-block"
                                 asp-controller="Account"
                                 asp-action="SignUp"
                                 asp-route-returnUrl="@Context.Request.Path"
                             >
                                 SignUp
                             </a>
+                            <li class="nav-item me-auto d-sm-none">
+                                <a class="nav-link"
+                                   asp-route-returnUrl="@Context.Request.Path"
+                                   asp-controller="Account"
+                                   asp-action="Login">
+                                    Login
+                                </a>
+                            </li>
+                            <li class="nav-item me-auto d-sm-none">
+                                <a class="nav-link"
+                                   asp-controller="Account"
+                                   asp-action="SignUp"
+                                   asp-route-returnUrl="@Context.Request.Path">
+                                    SignUp
+                                </a>
+                            </li>
                         }
                         
                         @if (userAuthenticated && User.IsInRole(RoleNames.ADMIN))
                         {
-                            <a class="btn btn-sm btn-primary me-1" href="/Admin">Dashboard</a>
+                            <a class="btn btn-sm btn-primary me-1 d-none d-sm-inline-block"
+                                href="/Admin">
+                                Dashboard
+                            </a>
+                            <li class="nav-item me-auto d-sm-none">
+                                <a class="nav-link"
+                                    href="/Admin">
+                                    Dashboard
+                                </a>
+                            </li>
+
                         }
 
                         @if (userAuthenticated)
@@ -56,9 +82,17 @@
                                 asp-controller="Account"
                                 asp-action="Logout"
                                 asp-route-returnUrl="@returnUrl"
-                                class="btn btn-sm btn-primary">
+                               class="btn btn-sm btn-primary d-none d-sm-inline-block d-none d-sm-inline-block">
                                 Logout
                             </a>
+                            <li class="nav-item me-auto d-sm-none">
+                                <a asp-controller="Account"
+                                   asp-action="Logout"
+                                   asp-route-returnUrl="@returnUrl"
+                                   class="nav-link">
+                                    Logout
+                                </a>
+                            </li>
                         }
                     </ul>
                 </div>
