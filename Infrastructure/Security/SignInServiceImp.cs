@@ -41,4 +41,9 @@ public class SignInServiceImp : SignInService
 
         await _httpContext.SignInAsync("Cookies", principal);
     }
+
+    public async Task SignOutAsync()
+    {
+        await _httpContext.SignOutAsync();
+    }
 }

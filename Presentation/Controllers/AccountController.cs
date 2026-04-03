@@ -1,9 +1,7 @@
 ﻿using Application.Account;
 using Application.User;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Models.Account;
-using System.Security.Claims;
 
 namespace Presentation.Controllers
 {
@@ -80,9 +78,17 @@ namespace Presentation.Controllers
         [HttpGet]
         public async Task<IActionResult> Logout(string returnUrl)
         {
-            await HttpContext.SignOutAsync();
+            var result = await Mediator.Send(new Logout.Command());
 
-            SetSuccess("Logout Successfull");
+            if (result.Succeed)
+            {
+                SetSuccess("Logout Successfull.");
+            }
+            else
+            {
+                SetError("Logout Failed.");
+            }
+
             return Redirect(returnUrl ?? "/");
         }
     }
