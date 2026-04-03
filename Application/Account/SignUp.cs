@@ -22,11 +22,13 @@ public class SignUp
     {
         private readonly DataContext _dataContext;
         private readonly PasswordService _passwordService;
+        private readonly SignInService _signInService;
 
-        public Handler(DataContext dataContext, PasswordService passwordService)
+        public Handler(DataContext dataContext, PasswordService passwordService, SignInService signInService)
         {
             _dataContext = dataContext;
             _passwordService = passwordService;
+            _signInService = signInService;
         }
         public async Task<Result<SignUpDto>> Handle(Command request, CancellationToken cancellationToken)
         {
@@ -59,13 +61,11 @@ public class SignUp
 
             if (result > 0)
             {
+                await _signInService.SignInAsync(user.Id);
                 return Result<SignUpDto>.Success(new() { UserId = user.Id });
             }
-            else
-            {
-                return Result<SignUpDto>.Failure("Problem Signing up");
-            }
-
+            
+            return Result<SignUpDto>.Failure("Problem Signing up");
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Infrastructure
             services.AddScoped<PasswordService, PasswordServiceImp>();
             services.AddHttpContextAccessor();
             services.AddScoped<UserAccessor, UserAccessorImp>();
+            services.AddScoped<SignInService, SignInServiceImp>();
 
             return services;
         }

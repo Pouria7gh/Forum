@@ -9,47 +9,42 @@ namespace Application.Account;
 
 public class Login
 {
-    public class Command : IRequest<Result<LoginDto>>
+    public class Command : IRequest<Result<Unit>>
     {
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
     }
 
-    public class Handler : IRequestHandler<Command, Result<LoginDto>>
+    public class Handler : IRequestHandler<Command, Result<Unit>>
     {
         private readonly DataContext _dataContext;
         private readonly PasswordService _passwordService;
-
-        public Handler(DataContext dataContext, PasswordService passwordService)
+        private readonly SignInService _signInService;
+        public Handler(DataContext dataContext, PasswordService passwordService, SignInService signInService)
         {
             _dataContext = dataContext;
             _passwordService = passwordService;
+            _signInService = signInService;
         }
-        public async Task<Result<LoginDto>> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
         {
             var user = await _dataContext.Users.FirstOrDefaultAsync(x => x.Email == request.Email, 
                 cancellationToken: cancellationToken);
 
             if (user == null)
             {
-                return Result<LoginDto>.Failure("Email or Password is wrong.");
+                return Result<Unit>.Failure("Email or Password is wrong.");
             }
 
             var result = _passwordService.VerifyPassword(user, request.Password, user.PasswordHashed);
             
             if (result)
             {
-                var roles = await _dataContext.Roles
-                    .Where(x => x.UserRoles.Any(x => x.UserId == user.Id))
-                    .Select(x => x.Name)
-                    .ToListAsync(cancellationToken);
-                
-                return Result<LoginDto>.Success(new() { UserId = user.Id, Roles = roles});
+                await _signInService.SignInAsync(user.Id);
+                return Result<Unit>.Success(Unit.Value);
             }
-            else
-            {
-                return Result<LoginDto>.Failure("Email or Password is wrong.");
-            }
+
+            return Result<Unit>.Failure("Email or Password is wrong.");
         }
     }
 }

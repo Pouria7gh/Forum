@@ -40,32 +40,9 @@ namespace Presentation.Controllers
                 SetError(result.ErrorMessage!);
                 return View(model);
             }
-
-            await SignInWithCookie(result.Value!.UserId);
            
             SetSuccess("Signup Successful");
             return Redirect(returnUrl);
-        }
-
-        private async Task SignInWithCookie(Guid userId, List<string>? roles = null)
-        {
-            var claims = new List<Claim>
-            {
-                new(ClaimTypes.NameIdentifier, userId.ToString())
-            };
-
-            if (roles != null)
-            {
-                foreach(string role in roles)
-                {
-                    claims.Add(new(ClaimTypes.Role, role));
-                }
-            }
-
-            var identity = new ClaimsIdentity(claims, "Cookies");
-            var principal = new ClaimsPrincipal(identity);
-
-            await HttpContext.SignInAsync("Cookies", principal);
         }
 
         [HttpGet]
@@ -94,8 +71,6 @@ namespace Presentation.Controllers
                 SetError(result.ErrorMessage!);
                 return View("Login", model);
             }
-
-            await SignInWithCookie(result.Value!.UserId, result.Value!.Roles);
 
             SetSuccess("Login successful");
             return Redirect(returnUrl);
