@@ -79,6 +79,10 @@ public class DataContext : DbContext
         {
             entity.HasKey(f => f.Id);
 
+            entity.Property(f => f.Slug)
+                .IsRequired();
+            entity.HasIndex(f => f.Slug);
+
             entity.Property(f => f.Title)
                 .HasMaxLength(256)
                 .IsRequired();
