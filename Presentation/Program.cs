@@ -1,5 +1,6 @@
 using Application;
 using Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Persistence.Providers;
 using Persistence.SeedData;
@@ -53,6 +54,14 @@ app.MapControllerRoute(
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
 
-await Seed.AddSeedData(services.GetRequiredService<DataContext>());
+var dbContext = services.GetRequiredService<DataContext>();
+var migration = dbContext.Database.GetPendingMigrations();
+
+if (migration.Any())
+{
+    dbContext.Database.Migrate();
+}
+
+await Seed.AddSeedData(dbContext);
 
 app.Run();
