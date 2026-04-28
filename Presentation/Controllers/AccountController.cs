@@ -20,7 +20,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SignUp(SignUpViewModel model, string returnUrl)
+        public async Task<IActionResult> SignUp(SignUpViewModel model, string? returnUrl)
         {
             if (!ModelState.IsValid)
                 return View(model);
@@ -40,7 +40,7 @@ namespace Presentation.Controllers
             }
            
             SetSuccess("Signup Successful");
-            return Redirect(returnUrl);
+            return Redirect(returnUrl ?? "/");
         }
 
         [HttpGet]
@@ -56,7 +56,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl)
+        public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl)
         {
             var result = await Mediator.Send(new Login.Command()
             {
@@ -71,12 +71,12 @@ namespace Presentation.Controllers
             }
 
             SetSuccess("Login successful");
-            return Redirect(returnUrl);
+            return Redirect(returnUrl ?? "/");
             
         }
 
         [HttpGet]
-        public async Task<IActionResult> Logout(string returnUrl)
+        public async Task<IActionResult> Logout(string? returnUrl)
         {
             var result = await Mediator.Send(new Logout.Command());
 
